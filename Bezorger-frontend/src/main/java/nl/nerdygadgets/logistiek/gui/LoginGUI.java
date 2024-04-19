@@ -39,7 +39,6 @@ public class LoginGUI extends DefaultJFrame {
 
     private ActionListener ActionListener() {
         return e -> {
-
             System.out.println("Login button clicked");
             System.out.println("Username: " + usernameField.getText());
             System.out.println("Password: " + new String(passwordField.getPassword()));
