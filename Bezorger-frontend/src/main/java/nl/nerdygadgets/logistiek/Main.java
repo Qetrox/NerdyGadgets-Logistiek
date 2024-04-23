@@ -2,7 +2,11 @@ package nl.nerdygadgets.logistiek;
 
 import nl.nerdygadgets.logistiek.gui.LoadGUI;
 import nl.nerdygadgets.logistiek.gui.LoginGUI;
+import nl.nerdygadgets.logistiek.util.DefaultJFrame;
 
+
+
+import javax.swing.*;
 import java.io.IOException;
 
 public class Main {
@@ -10,6 +14,7 @@ public class Main {
 
         LoadGUI frame = new LoadGUI();
         new LoginGUI(frame);
+
 
         //Test some connections and stuff then close loadgui and open login gui
 
