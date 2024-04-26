@@ -24,8 +24,8 @@ public class RoutingService {
         return instance;
     }
 
-    private RoutingService() {
-        hopper = createGraphHopperInstance("src/main/resources/osn/flevoland-latest.osm.pbf");
+    private RoutingService() { // TODO: Verander naar flevoland-latest als je sneller wilt opstarten en je geen adressen buiten flevoland hebt.
+        hopper = createGraphHopperInstance("src/main/resources/osn/netherlands-latest.osm.pbf");
     }
 
     private GraphHopper createGraphHopperInstance(String ghLoc) {
