@@ -50,4 +50,8 @@ public class Package {
         this.delivered = delivered;
     }
 
+    public String toString() {
+        return "Package #" + this.id + " Adress: " + this.adress + " Name: " + this.name + " Weight: " + this.weight + " size: " + this.size.toString();
+    }
+
 }

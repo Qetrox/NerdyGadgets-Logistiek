@@ -31,9 +31,9 @@ public class MapPanel extends JXMapViewer {
 
         setPreferredSize(new Dimension(800, 800));
 
-        setTileFactory(new DefaultTileFactory(new OSMTileFactoryInfo("", "https://tile.openstreetmap.org")));
-        setAddressLocation(new GeoPosition(50.11, 8.68));
-        setZoom(12);
+        setTileFactory(new DefaultTileFactory(new OSMTileFactoryInfo("", "https://tile.openstreetmap.de")));
+        setAddressLocation(new GeoPosition(52.377011026016035, 5.1755491265934825));
+        setZoom(7);
 
         WaypointPainter painter = new WaypointPainter();
         painter.setWaypoints(waypoints);
@@ -128,7 +128,7 @@ public class MapPanel extends JXMapViewer {
             for(RoutingData data : routingData) {
                 draw(path, data);
             }
-            g2d.setColor(new Color(255, 23, 120, 80));
+            g2d.setColor(new Color(74, 23, 255, 80));
             g2d.setStroke(new BasicStroke(5f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
             g2d.draw(path);
             g2d.dispose();

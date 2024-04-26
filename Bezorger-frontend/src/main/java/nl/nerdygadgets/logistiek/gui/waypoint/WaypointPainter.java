@@ -12,7 +12,7 @@ import java.io.IOException;
 
 public class WaypointPainter extends org.jxmapviewer.viewer.WaypointPainter<Waypoint> {
 
-    final BufferedImage pinImage = ImageIO.read(new File("src/main/resources/images/pin.png"));
+    final BufferedImage pinImage = ImageIO.read(new File("src/main/resources/images/icon/pin.png"));
 
     public WaypointPainter() throws IOException {
     }

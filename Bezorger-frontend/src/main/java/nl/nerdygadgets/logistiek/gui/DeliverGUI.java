@@ -28,10 +28,10 @@ public class DeliverGUI extends DefaultJFrame {
         MapPanel mapViewer = new MapPanel();
         DeliverInfoPanel deliverInfoPanel = new DeliverInfoPanel();
 
+        mapViewer.addWaypoint(new Waypoint(new GeoPosition(52.3843322878619, 5.137340734129197), new Package("Idk laan 2", "Persoon", 1, 1, 1, 1, 1)));
         mapViewer.addWaypoint(new Waypoint(new GeoPosition(52.377011026016035, 5.1755491265934825), new Package("Idk laan 1", "Persoon", 1, 1, 1, 1, 1)));
-        mapViewer.addWaypoint(new Waypoint(new GeoPosition(52.3843322878619, 5.137340734129197)));
-        mapViewer.addWaypoint(new Waypoint(new GeoPosition(52.37556412545035, 5.2157946499848915)));
-        mapViewer.addWaypoint(new Waypoint(new GeoPosition(52.50798283349655, 5.469818870113745)));
+        mapViewer.addWaypoint(new Waypoint(new GeoPosition(52.37556412545035, 5.2157946499848915), new Package("Idk laan 3", "Persoon", 1, 1, 1, 1, 1)));
+        mapViewer.addWaypoint(new Waypoint(new GeoPosition(52.50798283349655, 5.469818870113745), new Package("Idk laan 4", "Persoon", 1, 1, 1, 1, 1)));
 
 
         setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
