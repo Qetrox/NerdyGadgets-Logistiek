@@ -34,11 +34,11 @@ public class DeliverGUI extends DefaultJFrame {
         mapViewer.addWaypoint(new Waypoint(new GeoPosition(52.50798283349655, 5.469818870113745), new Package("Idk laan 4", "Persoon", 1, 1, 1, 1, 1)));
 
 
-        setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        setLayout(new BorderLayout(0,0));
 
 
-        getContentPane().add(deliverInfoPanel);
-        getContentPane().add(mapViewer);
+        getContentPane().add(mapViewer, BorderLayout.WEST);
+        getContentPane().add(deliverInfoPanel, BorderLayout.EAST);
 
         setVisible(true);
     }

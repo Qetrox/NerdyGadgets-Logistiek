@@ -7,14 +7,18 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 public class LoginGUI extends DefaultJFrame {
 
     private static JTextField usernameField;
     private static JPasswordField passwordField;
 
-    public LoginGUI(JFrame parentFrame) {
-        JDialog frame = new JDialog(parentFrame, "Inloggen", true);
+    private static JFrame parentFrame;
+
+    public LoginGUI(JFrame _parentFrame) {
+        JDialog frame = new JDialog(_parentFrame, "Inloggen", true);
+        parentFrame = _parentFrame;
 
         JButton loginButton = new JButton("Inloggen");
         loginButton.addActionListener(ActionListener());
@@ -43,6 +47,13 @@ public class LoginGUI extends DefaultJFrame {
             System.out.println("Username: " + usernameField.getText());
             System.out.println("Password: " + new String(passwordField.getPassword()));
 
+            try {
+                new DeliverPreviewGUI();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+            this.dispose();
+            parentFrame.dispose();
         };
     }
 
