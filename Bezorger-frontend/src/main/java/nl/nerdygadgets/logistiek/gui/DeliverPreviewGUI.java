@@ -36,8 +36,16 @@ public class DeliverPreviewGUI extends DefaultJFrame {
 
     public DeliverPreviewGUI() throws IOException {
         super("Logistiek");
-        setSize(1200, 800);
         setResizable(false);
+
+        GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+        if (gd.isFullScreenSupported()) {
+            setUndecorated(true);
+            gd.setFullScreenWindow(this);
+        } else {
+            setSize(12000, 8000);
+
+        };
 
         MapPanel mapViewer = new MapPanel();
         mapViewer.setPreferredSize(new Dimension(900, 800));
