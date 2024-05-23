@@ -18,7 +18,14 @@ public class DeliverGUI extends DefaultJFrame {
     public DeliverGUI() throws IOException {
         super("Logistiek");
 
-        setSize(1200, 800);
+        GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+        if (gd.isFullScreenSupported()) {
+            setUndecorated(true);
+            gd.setFullScreenWindow(this);
+        } else {
+            setSize(12000, 8000);
+
+        };
         setResizable(false);
 
 

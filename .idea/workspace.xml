@@ -4,7 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dcc24206-7cf4-48fb-a124-1a23292ea3e0" name="Changes" comment="" />
+    <list default="true" id="dcc24206-7cf4-48fb-a124-1a23292ea3e0" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Bezorger-frontend/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Bezorger-frontend/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Bezorger-frontend/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Bezorger-frontend/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Bezorger-frontend/.idea/runConfigurations/Run.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Bezorger-frontend/.idea/runConfigurations/Run.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/.idea/misc.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />

@@ -8,6 +8,7 @@ import nl.nerdygadgets.logistiek.gui.panels.LoadPanel;
 import nl.nerdygadgets.logistiek.util.DefaultJFrame;
 import javafx.scene.web.WebView;
 
+import java.awt.*;
 import java.io.IOException;
 
 public class LoadGUI extends DefaultJFrame {
@@ -16,7 +17,14 @@ public class LoadGUI extends DefaultJFrame {
 
     public LoadGUI() throws IOException {
         super("Logistiek");
-        setSize(800, 600);
+        GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+        if (gd.isFullScreenSupported()) {
+            setUndecorated(true);
+            gd.setFullScreenWindow(this);
+        } else {
+            setSize(12000, 8000);
+
+        };
         setResizable(false);
         getContentPane().add(new LoadPanel());
         setVisible(true);
