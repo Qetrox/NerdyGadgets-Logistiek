@@ -16,7 +16,7 @@ public class Manager_overzicht {
         panel.add(label);
         panel.add(button);
         frame.add(panel);
-        frame.setSize(200, 300);
+        frame.setSize(1920, 1080);
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
