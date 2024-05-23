@@ -26,14 +26,14 @@ public class LoginHandler implements HttpHandler {
             System.out.println(key + " = " + params.get(key));
         }
 
-        String username = exchange.getRequestHeaders().getFirst("username");
-        String password = exchange.getRequestHeaders().getFirst("password");
+        //String username = exchange.getRequestHeaders().getFirst("username");
+        //String password = exchange.getRequestHeaders().getFirst("password");
 
-        exchange.sendResponseHeaders(400, 0);
-        exchange.getResponseBody().close();
-        return;
+        String username = params.get("username");
+        String password = params.get("password");
 
-        /*if(username == null || password == null) {
+
+        if(username == null || password == null) {
             exchange.sendResponseHeaders(400, 0);
             exchange.getResponseBody().close();
             return;
@@ -41,7 +41,7 @@ public class LoginHandler implements HttpHandler {
 
         String token = tryLogin(username, password);
         if(token == null) {
-            exchange.sendResponseHeaders(401, 0);
+            exchange.sendResponseHeaders(403, 0);
             exchange.getResponseBody().close();
             return;
         }
@@ -60,7 +60,7 @@ public class LoginHandler implements HttpHandler {
 
         } catch (IOException e) {
             e.printStackTrace();
-        }*/
+        }
     }
 
     private static String tryLogin(String username, String password) {
@@ -74,8 +74,9 @@ public class LoginHandler implements HttpHandler {
             rs = conn.query("SELECT * FROM employee WHERE username = '" + username + "' AND password = '" + password + "'");
             if (rs.next()) {
                 // create a token
+                String token = AuthHelper.generateToken(rs.getInt("employeeId"));
                 DatabaseConnector.CloseVars(stmt, rs, connection);
-                return AuthHelper.generateToken(rs.getInt("id"));
+                return token;
             }
 
             DatabaseConnector.CloseVars(stmt, rs, connection);
