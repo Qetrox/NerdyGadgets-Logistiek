@@ -16,6 +16,7 @@ dependencies {
     // https://mvnrepository.com/artifact/com.mysql/mysql-connector-j
     implementation group: 'com.mysql', name: 'mysql-connector-j', version: '8.4.0'
     implementation 'org.apache.commons:commons-dbcp2:2.9.0'
+    implementation 'org.apache.commons:commons-lang3:3.14.0'
 
 }
 
