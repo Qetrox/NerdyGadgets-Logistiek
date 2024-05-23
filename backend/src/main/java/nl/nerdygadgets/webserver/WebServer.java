@@ -2,7 +2,8 @@ package nl.nerdygadgets.webserver;
 
 import com.sun.net.httpserver.HttpServer;
 import nl.nerdygadgets.util.Log;
-import nl.nerdygadgets.webserver.handlers.TestHandler;
+import nl.nerdygadgets.webserver.handlers.LoginHandler;
+import nl.nerdygadgets.webserver.handlers.MainHandler;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -11,6 +12,8 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.logging.Logger;
 
 public class WebServer {
+
+    public static int startTimestamp;
 
     private static final Logger log = Log.logger;
     private static final ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
@@ -22,6 +25,7 @@ public class WebServer {
      * @throws IOException Er kunnen dingen misgaan dus vergeet geen try-catch te gebruiken
      */
     public WebServer() throws IOException {
+        startTimestamp = (int) (System.currentTimeMillis());
         this.server = HttpServer.create(new InetSocketAddress(8080), 0);
         this.server.setExecutor(threadPoolExecutor);
     }
@@ -32,7 +36,8 @@ public class WebServer {
     public void addRoutes() {
         /* TODO: voeg hierzo nieuwe routes/urls toe met de benodigde handler */
 
-        this.server.createContext("/", new TestHandler());
+        this.server.createContext("/", new MainHandler());
+        this.server.createContext("/login", new LoginHandler());
     }
 
     /**

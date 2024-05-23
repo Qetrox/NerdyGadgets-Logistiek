@@ -14,7 +14,7 @@ import java.sql.Statement;
 /**
  * Een voorbeeld handler
  */
-public class TestHandler implements HttpHandler {
+public class MainHandler implements HttpHandler {
 
 
     @Override
@@ -29,9 +29,6 @@ public class TestHandler implements HttpHandler {
         try {
             connection = conn.getConnection();
             stmt = connection.createStatement();
-
-            // Use the database
-            conn.execute("USE u127250p176374_nerdygadgets");
 
             // Query the database
             rs = conn.query("SELECT * FROM brand");
