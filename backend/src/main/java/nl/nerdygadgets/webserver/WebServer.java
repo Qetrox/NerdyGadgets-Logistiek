@@ -4,6 +4,7 @@ import com.sun.net.httpserver.HttpServer;
 import nl.nerdygadgets.util.Log;
 import nl.nerdygadgets.webserver.handlers.LoginHandler;
 import nl.nerdygadgets.webserver.handlers.MainHandler;
+import nl.nerdygadgets.webserver.handlers.manager.BestellingenHandler;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -38,6 +39,7 @@ public class WebServer {
 
         this.server.createContext("/", new MainHandler());
         this.server.createContext("/login", new LoginHandler());
+        this.server.createContext("/manager/bestellingen", new BestellingenHandler());
     }
 
     /**

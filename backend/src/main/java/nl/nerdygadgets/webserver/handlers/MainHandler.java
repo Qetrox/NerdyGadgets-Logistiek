@@ -1,5 +1,7 @@
 package nl.nerdygadgets.webserver.handlers;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import nl.nerdygadgets.Main;
@@ -22,24 +24,7 @@ public class MainHandler implements HttpHandler {
 
         DatabaseConnector conn = Main.getDatabaseConnection();
 
-        ResultSet rs = null;
-        Statement stmt = null;
-        Connection connection = null;
-
-        try {
-            connection = conn.getConnection();
-            stmt = connection.createStatement();
-
-            // Query the database
-            rs = conn.query("SELECT * FROM brand");
-
-            StringBuilder res = new StringBuilder();
-
-            while (rs.next()) {
-                res.append(rs.getString("brandName")).append(" ");
-            }
-
-
+        String res = "{\"success\":true}";
 
             // Code 200 om aan te geven dat het OK is, en de lengte van wat we gaan terugsturen
             exchange.sendResponseHeaders(200, res.length());
@@ -48,11 +33,5 @@ public class MainHandler implements HttpHandler {
             exchange.getResponseBody().write(res.toString().getBytes());
             exchange.getResponseBody().flush();
             exchange.getResponseBody().close();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            DatabaseConnector.CloseVars(stmt, rs, connection);
-        }
     }
 }

@@ -1,5 +1,7 @@
 package nl.nerdygadgets.util;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,6 +21,38 @@ public class WebHelper {
             }
         }
         return result;
+    }
+
+    public static class WebToken {
+        public String token;
+        public boolean isManager;
+        public int id;
+
+        public WebToken(String token, boolean isManager, int id) {
+            this.token = token;
+            this.isManager = isManager;
+            this.id = id;
+        }
+
+    }
+
+    public static class WebProduct {
+        public String naam;
+        public int aantal;
+        public int id;
+        public WebProduct(String naam, int aantal, int id) {
+            this.naam = naam;
+            this.aantal = aantal;
+            this.id = id;
+        }
+    }
+
+    public static class WebOrder {
+        public ArrayList<WebProduct> producten = new ArrayList<>();
+        public int id;
+        public WebOrder(int id, WebProduct[] product) {
+            producten.addAll(Arrays.asList(product));
+        }
     }
 
 }

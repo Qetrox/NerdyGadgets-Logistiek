@@ -4,10 +4,7 @@ import nl.nerdygadgets.util.DatabaseConnector;
 import nl.nerdygadgets.webserver.WebServer;
 
 import java.io.IOException;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Connection;
 
 
 public class Main {

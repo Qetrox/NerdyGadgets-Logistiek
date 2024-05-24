@@ -1,5 +1,7 @@
 package nl.nerdygadgets.webserver.handlers;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import nl.nerdygadgets.Main;
@@ -39,7 +41,7 @@ public class LoginHandler implements HttpHandler {
             return;
         }
 
-        String token = tryLogin(username, password);
+        WebHelper.WebToken token = tryLogin(username, password);
         if(token == null) {
             exchange.sendResponseHeaders(403, 0);
             exchange.getResponseBody().close();
@@ -47,8 +49,13 @@ public class LoginHandler implements HttpHandler {
         }
 
         try {
-            StringBuilder res = new StringBuilder();
-            res.append(token);
+
+            GsonBuilder builder = new GsonBuilder();
+            builder.setPrettyPrinting();
+            Gson gson = builder.create();
+
+            String res = gson.toJson(token, WebHelper.WebToken.class);
+
 
             // Code 200 om aan te geven dat het OK is, en de lengte van wat we gaan terugsturen
             exchange.sendResponseHeaders(200, res.length());
@@ -63,7 +70,7 @@ public class LoginHandler implements HttpHandler {
         }
     }
 
-    private static String tryLogin(String username, String password) {
+    private static WebHelper.WebToken tryLogin(String username, String password) {
         DatabaseConnector conn = Main.getDatabaseConnection();
         ResultSet rs = null;
         Statement stmt = null;
@@ -74,9 +81,11 @@ public class LoginHandler implements HttpHandler {
             rs = conn.query("SELECT * FROM employee WHERE username = '" + username + "' AND password = '" + password + "'");
             if (rs.next()) {
                 // create a token
-                String token = AuthHelper.generateToken(rs.getInt("employeeId"));
+                int id = rs.getInt("employeeId");
+                String token = AuthHelper.generateToken(id);
+                boolean isManager = rs.getInt("isManager") == 1;
                 DatabaseConnector.CloseVars(stmt, rs, connection);
-                return token;
+                return new WebHelper.WebToken(token, isManager, id);
             }
 
             DatabaseConnector.CloseVars(stmt, rs, connection);
