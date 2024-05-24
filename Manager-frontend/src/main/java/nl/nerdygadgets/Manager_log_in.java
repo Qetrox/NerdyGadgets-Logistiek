@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 
-public class Manager_log_in{
+public class Manager_log_in {
     public static void main(String[] args) {
         // Maak een JFrame aan
         JFrame frame = new JFrame("Manager ui");
@@ -16,29 +16,24 @@ public class Manager_log_in{
         // Maak een JPanel aan
         JPanel panel = new JPanel();
         frame.add(panel);
-        placeComponents(panel);
-
-        JPanel panel2 = new JPanel();
-
+        placeComponents(frame, panel);
 
         // Zet het frame zichtbaar
         frame.setVisible(true);
     }
-
-    private static void placeComponents(JPanel panel) {
+    private static void placeComponents(JFrame frame, JPanel panel) {
         panel.setLayout(null);
 
-        // Label voor wachtwoord
+        // Label voor login
         JLabel logIn = new JLabel("LOG IN");
-        logIn.setBounds(80,20,80,25);
+        logIn.setBounds(80, 20, 80, 25);
         panel.add(logIn);
 
-
         // Email veld
-
         JTextField email = new JTextField("EMAIL");
-        email.setBounds(10,50, 200, 30);
+        email.setBounds(10, 50, 200, 30);
         panel.add(email);
+
         // Wachtwoord veld
         JPasswordField password = new JPasswordField("PASSWORD");
         password.setBounds(10, 90, 200, 30);
@@ -59,7 +54,7 @@ public class Manager_log_in{
         // Begin zonder echo character zodat de placeholder zichtbaar is
         password.setEchoChar((char) 0);
 
-        // Voegfocus listeners toe om de placeholders functionaliteit te implementeren
+        // Voeg focus listeners toe om de placeholders functionaliteit te implementeren
         email.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
@@ -70,12 +65,12 @@ public class Manager_log_in{
 
             @Override
             public void focusLost(FocusEvent e) {
-                if (email.getText().equals("")){
+                if (email.getText().equals("")) {
                     email.setText("EMAIL");
                 }
-
             }
         });
+
         password.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
@@ -93,10 +88,9 @@ public class Manager_log_in{
                 }
             }
         });
-        // Stukje hardcode
-        // Correct email
+
+        // Correct email en password
         String correctEmail = "Email";
-        // Correct password
         String correctPassword = "Password";
 
         // Actie bij het klikken van de knop
@@ -105,16 +99,42 @@ public class Manager_log_in{
             public void actionPerformed(ActionEvent e) {
                 // Verkrijg het ingevoerde wachtwoord en email
                 String enteredPassword = new String(password.getPassword());
-                String enteredEmail = new String(email.getText());
+                String enteredEmail = email.getText();
 
                 // Controleer of ze correct zijn
-                if (enteredPassword.equals(correctPassword) || enteredEmail.equals(correctEmail)){
+                if (enteredPassword.equals(correctPassword) && enteredEmail.equals(correctEmail)) {
                     JOptionPane.showMessageDialog(panel, "Toegang verleend.");
-
+                    showNewPanel(frame);
                 } else {
                     JOptionPane.showMessageDialog(panel, "Toegang geweigerd");
                 }
             }
         });
+    }
+
+    private static void showNewPanel(JFrame frame) {
+        // Maak een nieuw panel
+        JPanel panel1 = new JPanel();
+        // Maak een label met de goede tekst
+        panel1.add(new JLabel("Two-Factor authentication"));
+        panel1.add(new JLabel("Email setup"));
+        panel1.add(new JLabel("We have sent a verification code to \n insert email"));
+        // Verwijder het huidige panel en voeg het nieuwe panel toe
+        frame.getContentPane().removeAll();
+        frame.add(panel1);
+        frame.revalidate();
+        frame.repaint();
+
+
+
+        JButton login = new JButton("LOG IN");
+        login.setBounds(110, 130, 100, 30);
+        panel1.add(login);
+
+        JButton forgot = new JButton("FORGOT?");
+        forgot.setBounds(10, 130, 100, 30);
+        panel1.add(forgot);
+
+
     }
 }
