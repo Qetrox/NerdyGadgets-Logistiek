@@ -61,7 +61,6 @@ public class RetourPreviewGUI extends DefaultJFrame {
         getContentPane().add(label, BorderLayout.NORTH);
         getContentPane().add(smallerButton(button), BorderLayout.SOUTH);
 
-
         setVisible(true);
     }
 
