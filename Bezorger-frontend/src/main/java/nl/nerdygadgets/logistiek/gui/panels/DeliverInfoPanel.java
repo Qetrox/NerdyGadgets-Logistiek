@@ -45,6 +45,7 @@ public class DeliverInfoPanel extends JPanel {
         closeButton.setForeground(Color.WHITE);
         closeButton.setFocusPainted(false);
         closeButton.setOpaque(false);
+        closeButton.setFont(new Font("", Font.PLAIN, 20));
         closeButton.setFont(closeButton.getFont().deriveFont(Font.BOLD));
         closeButton.setContentAreaFilled(false);
         closeButton.setBorderPainted(false);

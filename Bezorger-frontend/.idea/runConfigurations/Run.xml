@@ -1,7 +1,8 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Run" type="Application" factoryName="Application">
     <option name="ALTERNATIVE_JRE_PATH" value="ibm-17" />
-    <option name="MAIN_CLASS_NAME" value="Bezorgerfrontend." />
+    <option name="MAIN_CLASS_NAME" value="nl.nerdygadgets.logistiek.Main" />
+    <module name="bezorger.main" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>
