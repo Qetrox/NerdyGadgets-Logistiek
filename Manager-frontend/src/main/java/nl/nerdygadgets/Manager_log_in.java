@@ -18,6 +18,9 @@ public class Manager_log_in{
         frame.add(panel);
         placeComponents(panel);
 
+        JPanel panel2 = new JPanel();
+
+
         // Zet het frame zichtbaar
         frame.setVisible(true);
     }
@@ -100,13 +103,14 @@ public class Manager_log_in{
         login.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Verkrijg het ingevoerde wachtwoord
+                // Verkrijg het ingevoerde wachtwoord en email
                 String enteredPassword = new String(password.getPassword());
                 String enteredEmail = new String(email.getText());
 
-                // Controleer of het wachtwoord correct is
+                // Controleer of ze correct zijn
                 if (enteredPassword.equals(correctPassword) || enteredEmail.equals(correctEmail)){
                     JOptionPane.showMessageDialog(panel, "Toegang verleend.");
+
                 } else {
                     JOptionPane.showMessageDialog(panel, "Toegang geweigerd");
                 }
