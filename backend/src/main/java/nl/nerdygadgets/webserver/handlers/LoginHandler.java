@@ -40,6 +40,8 @@ public class LoginHandler implements HttpHandler {
                 return;
             }
 
+            System.out.println("Logged in: " + token.id + " as manager: " + token.isManager);
+
             try {
 
                 GsonBuilder builder = new GsonBuilder();

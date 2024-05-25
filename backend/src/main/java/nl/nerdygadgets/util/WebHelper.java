@@ -10,6 +10,11 @@ import java.util.Map;
 
 public class WebHelper {
 
+    /**
+     * * Hulp functie voor data opvragen uit requests
+     * @param query De query string
+     * @return Een map met de data
+     */
     public static Map<String, String> queryToMap(String query) {
         if(query == null) {
             return null;
@@ -26,6 +31,11 @@ public class WebHelper {
         return result;
     }
 
+    /**
+     * Zorgt ervoor dat er een geldige token in de query string zit, indien niet dan wordt er een 403 gestuurd
+     * @param exchange De exchange
+     * @return Of de token geldig is
+     */
     public static boolean handleTokenRequirement(HttpExchange exchange) {
         Map<String, String> params = queryToMap(exchange.getRequestURI().getQuery());
         if(params == null) {
@@ -138,5 +148,4 @@ public class WebHelper {
         }
 
     }
-
 }
