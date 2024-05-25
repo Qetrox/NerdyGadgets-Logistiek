@@ -26,12 +26,12 @@ public class MainHandler implements HttpHandler {
 
         String res = "{\"success\":true}";
 
-            // Code 200 om aan te geven dat het OK is, en de lengte van wat we gaan terugsturen
-            exchange.sendResponseHeaders(200, res.length());
+        // Code 200 om aan te geven dat het OK is, en de lengte van wat we gaan terugsturen
+        exchange.sendResponseHeaders(200, res.length());
 
-            // Stuur alle data
-            exchange.getResponseBody().write(res.toString().getBytes());
-            exchange.getResponseBody().flush();
-            exchange.getResponseBody().close();
+        // Stuur alle data
+        exchange.getResponseBody().write(res.toString().getBytes());
+        exchange.getResponseBody().flush();
+        exchange.getResponseBody().close();
     }
 }

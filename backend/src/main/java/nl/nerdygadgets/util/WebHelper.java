@@ -1,5 +1,8 @@
 package nl.nerdygadgets.util;
 
+import com.sun.net.httpserver.HttpExchange;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -23,6 +26,80 @@ public class WebHelper {
         return result;
     }
 
+    public static boolean handleTokenRequirement(HttpExchange exchange) {
+        Map<String, String> params = queryToMap(exchange.getRequestURI().getQuery());
+        if(params == null) {
+
+            try {
+                exchange.sendResponseHeaders(400, 0);
+                exchange.getResponseBody().close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return false;
+        }
+        if(params.containsKey("token")) {
+            String token = params.get("token");
+            if(AuthHelper.checkToken(AuthHelper.getToken(token))) {
+                return true;
+            } else {
+
+                try {
+                    exchange.sendResponseHeaders(403, 0);
+                    exchange.getResponseBody().close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        try {
+            exchange.sendResponseHeaders(403, 0);
+            exchange.getResponseBody().close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public static boolean handleManagerRequirement(HttpExchange exchange) {
+        Map<String, String> params = queryToMap(exchange.getRequestURI().getQuery());
+        if(params == null) {
+
+            try {
+                exchange.sendResponseHeaders(400, 0);
+                exchange.getResponseBody().close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return false;
+        }
+        if(params.containsKey("token")) {
+            String token = params.get("token");
+            if(AuthHelper.checkManager(AuthHelper.getToken(token))) {
+                return true;
+            } else {
+
+                    try {
+                        exchange.sendResponseHeaders(403, 0);
+                        exchange.getResponseBody().close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+            }
+        }
+
+        try {
+            exchange.sendResponseHeaders(403, 0);
+            exchange.getResponseBody().close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public static class WebToken {
         public String token;
         public boolean isManager;
@@ -36,23 +113,30 @@ public class WebHelper {
 
     }
 
-    public static class WebProduct {
-        public String naam;
-        public int aantal;
-        public int id;
-        public WebProduct(String naam, int aantal, int id) {
-            this.naam = naam;
-            this.aantal = aantal;
-            this.id = id;
-        }
-    }
-
     public static class WebOrder {
-        public ArrayList<WebProduct> producten = new ArrayList<>();
         public int id;
-        public WebOrder(int id, WebProduct[] product) {
-            producten.addAll(Arrays.asList(product));
+        public String date;
+
+        public String firstName;
+        public String lastName;
+        public String email;
+        public String streetName;
+        public String apartmentNumber;
+        public String postalCode;
+        public String city;
+
+        public WebOrder(int id, String date, String firstName, String lastName, String email, String streetname, String apartmentNumber, String postalCode, String city) {
+            this.id = id;
+            this.date = date;
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.email = email;
+            this.streetName = streetname;
+            this.apartmentNumber = apartmentNumber;
+            this.postalCode = postalCode;
+            this.city = city;
         }
+
     }
 
 }

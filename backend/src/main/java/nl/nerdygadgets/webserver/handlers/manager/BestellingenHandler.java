@@ -2,6 +2,7 @@ package nl.nerdygadgets.webserver.handlers.manager;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import nl.nerdygadgets.Main;
@@ -10,6 +11,7 @@ import nl.nerdygadgets.util.DatabaseConnector;
 import nl.nerdygadgets.util.WebHelper;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,7 +24,9 @@ public class BestellingenHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
 
-        System.out.println("BestellingenHandler");
+        if(!WebHelper.handleManagerRequirement(exchange)) {
+            return;
+        }
 
         Map<Integer, WebHelper.WebOrder> orders = new HashMap<>();
 
@@ -33,21 +37,20 @@ public class BestellingenHandler implements HttpHandler {
         try {
             connection = conn.getConnection();
             stmt = connection.createStatement();
-            rs = conn.query("SELECT * FROM u127250p176374_nerdygadgets.order JOIN order_item ON id = order_id JOIN product ON productId = product_id LIMIT 50");
+            rs = conn.query("SELECT `order`.id, order_date, email, first_name, surname, street_name, apartment_nr, postal_code, city FROM `order` JOIN user on user_id = user.id");
             while (rs.next()) {
-                int orderId = rs.getInt("order_id");
-                int productId = rs.getInt("productId");
-                String productName = rs.getString("productName");
-                int productAmount = rs.getInt("quantity");
-
-                WebHelper.WebProduct product = new WebHelper.WebProduct(productName, productAmount, productId);
-
-                if (orders.containsKey(orderId)) {
-                    orders.get(orderId).producten.add(product);
-                } else {
-                    WebHelper.WebOrder order = new WebHelper.WebOrder(orderId, new WebHelper.WebProduct[]{product});
-                    orders.put(orderId, order);
-                }
+                WebHelper.WebOrder order = new WebHelper.WebOrder(
+                        rs.getInt("id"),
+                        rs.getString("order_date"),
+                        rs.getString("first_name"),
+                        rs.getString("surname"),
+                        rs.getString("email"),
+                        rs.getString("street_name"),
+                        rs.getString("apartment_nr"),
+                        rs.getString("postal_code"),
+                        rs.getString("city")
+                );
+                orders.put(order.id, order);
             }
 
             DatabaseConnector.CloseVars(stmt, rs, connection);
@@ -56,17 +59,17 @@ public class BestellingenHandler implements HttpHandler {
             builder.setPrettyPrinting();
             Gson gson = builder.create();
 
-            //didnt send any data?
-            String res = gson.toJson(orders, WebHelper.WebOrder.class);
+            Type mapType = new TypeToken<Map<Integer, WebHelper.WebOrder>>() {}.getType();
+            String res = gson.toJson(orders, mapType);
 
             // Code 200 om aan te geven dat het OK is, en de lengte van wat we gaan terugsturen
-            exchange.sendResponseHeaders(200,0);
+            exchange.sendResponseHeaders(200,res.length());
             exchange.getResponseBody().write(res.getBytes());
             exchange.getResponseBody().flush();
             exchange.getResponseBody().close();
 
 
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
