@@ -7,9 +7,6 @@ import java.awt.*;
 import java.io.IOException;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class RetourGUI extends DefaultJFrame {
 
@@ -49,11 +46,11 @@ class RMATable extends JPanel {
     public RMATable() {
         setLayout(new BorderLayout());
 
-        String[] columnNames = {"RMA ID", "Order ID", "Customer Name", "Created on Date", "Products", "Resolution Type", "Returns Reason", "Request Status", "Edit"};
+        String[] columnNames = {"Retour ID", "Order ID", "Customer Name", "Created on Date", "Products", "Resolution Type", "Returns Reason", "Handled"};
 
         Object[][] data = {
-                {"#408", "#1003", "Spicegems", "Nov 21, 2017", "Timex Analog Off-White Dial Men's Watch - Silver", "Refund", "Wrong Color", false, "Edit"},
-                {"#407", "#1003", "Spicegems", "Oct 20, 2017", "Timex Analog Off-White Dial Men's Watch - White", "Refund", "Wrong Color", false, "Edit"}
+                {"#408", "#1003", "Karen kik", "Nov 21, 2017", "Fortnite battle pass", "Refund", "Wrong Color", false},
+                {"#407", "#1003", "Bob bob", "Oct 20, 2017", "Fortnite golden scar", "Refund", "Wrong Color", false}
         };
 
         DefaultTableModel model = new DefaultTableModel(data, columnNames) {
@@ -64,58 +61,23 @@ class RMATable extends JPanel {
                 }
                 return String.class;
             }
+
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return column == 5 || column == 7; // Make only "Resolution Type" and "Request Status" columns editable
+            }
         };
 
         JTable table = new JTable(model);
-        table.getColumn("Request Status").setCellRenderer(table.getDefaultRenderer(Boolean.class));
-        table.getColumn("Request Status").setCellEditor(table.getDefaultEditor(Boolean.class));
 
-        table.getColumn("Edit").setCellRenderer(new ButtonRenderer());
-        table.getColumn("Edit").setCellEditor(new ButtonEditor(new JCheckBox(), "Edit"));
+        String[] resolutionOptions = {"Refund", "Refund (Store Credit)", "Exchange Product", "No Refund"};
+        JComboBox<String> resolutionComboBox = new JComboBox<>(resolutionOptions);
+        table.getColumn("Resolution Type").setCellEditor(new DefaultCellEditor(resolutionComboBox));
+
+        table.getColumn("Handled").setCellRenderer(table.getDefaultRenderer(Boolean.class));
+        table.getColumn("Handled").setCellEditor(table.getDefaultEditor(Boolean.class));
 
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.CENTER);
-    }
-
-    class ButtonRenderer extends JButton implements TableCellRenderer {
-        public ButtonRenderer() {
-            setOpaque(true);
-        }
-
-        @Override
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-            setText((value == null) ? "" : value.toString());
-            return this;
-        }
-    }
-
-    class ButtonEditor extends DefaultCellEditor {
-        private String label;
-        private JButton button;
-
-        public ButtonEditor(JCheckBox checkBox, String action) {
-            super(checkBox);
-            button = new JButton();
-            button.setOpaque(true);
-            button.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    fireEditingStopped();
-                    JOptionPane.showMessageDialog(button, action + " clicked for row " + label);
-                }
-            });
-        }
-
-        @Override
-        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-            label = (value == null) ? "" : value.toString();
-            button.setText(label);
-            return button;
-        }
-
-        @Override
-        public Object getCellEditorValue() {
-            return label;
-        }
     }
 }

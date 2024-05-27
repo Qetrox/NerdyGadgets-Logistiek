@@ -47,7 +47,7 @@ public class RetourLoginGUI extends DefaultJFrame {
             System.out.println("Password: " + new String(passwordField.getPassword()));
 
             try {
-                new RetourPreviewGUI();
+                new RetourGUI();
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
@@ -56,7 +56,6 @@ public class RetourLoginGUI extends DefaultJFrame {
         };
     }
 
-    // Method to add margin to a component
     private Component addMargin(Component component, Border border) {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBorder(border);
