@@ -196,6 +196,8 @@ public class Manager_log_in {
                 // Controleer of ze correct zijn
                 if (enteredCode == code) {
                     JOptionPane.showMessageDialog(panel1, "Toegang verleend.");
+                    frame.dispose();
+                    Manger_overzicht_list.main(new String[0]);
 //                    Openen_Scherm_Log_in();
                 } else {
                     JOptionPane.showMessageDialog(panel1, "Toegang geweigerd");
