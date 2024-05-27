@@ -18,13 +18,15 @@ public class LoadGUI extends DefaultJFrame {
     public LoadGUI() throws IOException {
         super("Logistiek");
         GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-        if (gd.isFullScreenSupported()) {
+        /*if (gd.isFullScreenSupported()) {
             setUndecorated(true);
             gd.setFullScreenWindow(this);
         } else {
-            setSize(12000, 8000);
+            setSize(1200, 800);
 
-        };
+        };*/
+        setSize(1200, 800);
+
         setResizable(false);
         getContentPane().add(new LoadPanel());
         setVisible(true);

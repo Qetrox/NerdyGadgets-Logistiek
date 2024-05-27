@@ -9,6 +9,7 @@ import nl.nerdygadgets.logistiek.util.CacheManager;
 import nl.nerdygadgets.logistiek.util.ColorUtil;
 import nl.nerdygadgets.logistiek.util.DefaultJFrame;
 import nl.nerdygadgets.logistiek.util.web.HttpUtil;
+import nl.nerdygadgets.logistiek.util.web.PackageStatus;
 import nl.nerdygadgets.logistiek.util.web.WebHelper;
 import org.jxmapviewer.viewer.GeoPosition;
 
@@ -44,13 +45,14 @@ public class DeliverPreviewGUI extends DefaultJFrame {
         setResizable(false);
 
         GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-        if (gd.isFullScreenSupported()) {
+        /*if (gd.isFullScreenSupported()) {
             setUndecorated(true);
             gd.setFullScreenWindow(this);
         } else {
-            setSize(12000, 8000);
+            setSize(1200, 800);
 
-        };
+        };*/
+        setSize(1200, 800);
 
         MapPanel mapViewer = new MapPanel();
         mapViewer.setPreferredSize(new Dimension(900, 800));
@@ -70,6 +72,7 @@ public class DeliverPreviewGUI extends DefaultJFrame {
 
         for(WebHelper.WebPackage p : route.packages) {
 
+            CacheManager.updatePackageStatus(p, PackageStatus.UNDELIVERED);
             mapViewer.addWaypoint(new Waypoint(new GeoPosition(p.latitude, p.longitude), new Package(p.address, p.name, 1, 1, 1, 1, 1)));
 
         }
@@ -79,7 +82,7 @@ public class DeliverPreviewGUI extends DefaultJFrame {
 
         setLayout(new BorderLayout(0,0));
 
-        JLabel label = new JLabel("Route (Order #1)");
+        JLabel label = new JLabel("Route #" + route.id);
         label.setFont(new Font("Arial", Font.PLAIN, 20));
         label.setHorizontalAlignment(SwingConstants.CENTER);
         label.setForeground(ColorUtil.TEXT_COLOR);

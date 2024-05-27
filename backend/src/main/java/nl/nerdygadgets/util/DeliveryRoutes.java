@@ -96,7 +96,7 @@ public class DeliveryRoutes {
 
         WebHelper.WebDelivery delivery = new WebHelper.WebDelivery(
                 time,
-                1,
+                null,
                 52.66358733694468,
                 5.597219287948651,
                 52.66358733694468,
@@ -115,6 +115,15 @@ public class DeliveryRoutes {
         createRoutes();
     }
 
+    public static WebHelper.WebDelivery getRoute(int driverId) {
+        for(WebHelper.WebDelivery delivery : routes.keySet()) {
+            if(delivery.driverId == driverId && routes.get(delivery)) {
+                return delivery;
+            }
+        }
+        return null;
+    }
+
     public static WebHelper.WebDelivery getRoute() {
         for(WebHelper.WebDelivery delivery : routes.keySet()) {
             return delivery;
@@ -124,5 +133,9 @@ public class DeliveryRoutes {
             }*/
         }
         return null;
+    }
+
+    public static void removeRoute(WebHelper.WebDelivery route) {
+        routes.remove(route);
     }
 }

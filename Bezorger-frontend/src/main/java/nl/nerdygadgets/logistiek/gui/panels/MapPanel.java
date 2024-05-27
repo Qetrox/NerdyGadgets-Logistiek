@@ -49,7 +49,12 @@ public class MapPanel extends JXMapViewer {
 
     }
 
-    private void reRenderWaypoints() throws IOException {
+    public void reRenderWaypoints() throws IOException {
+
+        for (Waypoint waypoint : waypoints) {
+            remove(waypoint.getButton());
+        }
+
         WaypointPainter painter = new WaypointPainter();
         painter.setWaypoints(waypoints);
         setOverlayPainter(painter);
@@ -97,6 +102,7 @@ public class MapPanel extends JXMapViewer {
 
         waypoints.add(waypoint);
         reRenderWaypoints();
+        System.out.println(waypoints.size());
     }
 
     public void removeWaypoint(Waypoint waypoint) throws IOException {
@@ -104,9 +110,12 @@ public class MapPanel extends JXMapViewer {
         reRenderWaypoints();
     }
 
-    public void clearWaypoints() throws IOException {
-        waypoints = new HashSet<>();
-        reRenderWaypoints();
+    public void clearWaypoints() {
+        for (Waypoint waypoint : waypoints) {
+            waypoint.getButton().setVisible(false); // Hide the button associated with the waypoint
+            remove(waypoint.getButton()); // Remove the button from the map
+        }
+        waypoints.clear(); // Clear the list of waypoints
     }
 
     public void setRoutingData(List<RoutingData> routingData) {

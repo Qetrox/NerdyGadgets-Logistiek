@@ -110,14 +110,14 @@ public class WebHelper {
     }
     public static class WebDelivery {
         public long id;
-        public int driverId;
+        public Integer driverId;
         public ArrayList<WebPackage> packages= new ArrayList<>();
         public double startLatitude;
         public double startLongitude;
         public double endLatitude;
         public double endLongitude;
 
-        public WebDelivery(long id, int driverId, double startLatitude, double startLongitude, double endLatitude, double endLongitude) {
+        public WebDelivery(long id, Integer driverId, double startLatitude, double startLongitude, double endLatitude, double endLongitude) {
             this.id = id;
             this.driverId = driverId;
             this.startLatitude = startLatitude;

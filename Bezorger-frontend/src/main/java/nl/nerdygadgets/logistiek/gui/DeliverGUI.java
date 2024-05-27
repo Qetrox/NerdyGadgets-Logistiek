@@ -22,10 +22,11 @@ public class DeliverGUI extends DefaultJFrame {
 
         GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
         if (gd.isFullScreenSupported()) {
-            setUndecorated(true);
-            gd.setFullScreenWindow(this);
+            //setUndecorated(true);
+            //gd.setFullScreenWindow(this); //dit verneukt de halve applicatie
+            setSize(1200, 800);
         } else {
-            setSize(12000, 8000);
+            setSize(1200, 800);
 
         };
         setResizable(false);
@@ -35,7 +36,6 @@ public class DeliverGUI extends DefaultJFrame {
         // toevoegen aan de contentpane doordat we mogelijk info moeten doorgeven en ophalen.
 
         MapPanel mapViewer = new MapPanel();
-        DeliverInfoPanel deliverInfoPanel = new DeliverInfoPanel();
 
         WebHelper.WebDelivery route = CacheManager.getCurrentDelivery();
 
@@ -45,8 +45,10 @@ public class DeliverGUI extends DefaultJFrame {
 
         for(WebHelper.WebPackage p : route.packages) {
 
+            if(CacheManager.getCurrentPackage() == null) {
+                CacheManager.setCurrentPackage(p);
+            }
             mapViewer.addWaypoint(new Waypoint(new GeoPosition(p.latitude, p.longitude), new Package(p.address, p.name, 1, 1, 1, 1, 1)));
-
         }
 
         //zet eind waypoint
@@ -54,6 +56,7 @@ public class DeliverGUI extends DefaultJFrame {
 
         setLayout(new BorderLayout(0,0));
 
+        DeliverInfoPanel deliverInfoPanel = new DeliverInfoPanel(mapViewer);
 
         getContentPane().add(mapViewer, BorderLayout.WEST);
         getContentPane().add(deliverInfoPanel, BorderLayout.EAST);

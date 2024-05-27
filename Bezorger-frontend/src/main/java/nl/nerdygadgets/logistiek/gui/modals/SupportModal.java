@@ -1,9 +1,11 @@
 package nl.nerdygadgets.logistiek.gui.modals;
 
+import nl.nerdygadgets.logistiek.util.CacheManager;
 import nl.nerdygadgets.logistiek.util.ColorUtil;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 
 public class SupportModal extends JDialog {
 
@@ -42,6 +44,11 @@ public class SupportModal extends JDialog {
 
         Submit.addActionListener(e -> {
             JOptionPane.showMessageDialog(this, "Support request submitted!");
+            try {
+                CacheManager.skipPackage();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
             dispose();
         });
 

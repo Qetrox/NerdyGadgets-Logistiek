@@ -1,7 +1,12 @@
 package nl.nerdygadgets.logistiek.gui.panels;
 
+import nl.nerdygadgets.logistiek.delivery.Package;
 import nl.nerdygadgets.logistiek.gui.modals.SupportModal;
+import nl.nerdygadgets.logistiek.gui.waypoint.Waypoint;
+import nl.nerdygadgets.logistiek.util.CacheManager;
 import nl.nerdygadgets.logistiek.util.ColorUtil;
+import nl.nerdygadgets.logistiek.util.web.WebHelper;
+import org.jxmapviewer.viewer.GeoPosition;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,6 +16,8 @@ public class DeliverInfoPanel extends JPanel {
 
     private static final int buttonWidth = 160;
     private static final int buttonHeight = 50;
+
+    private static long currentDeliveryId = CacheManager.getCurrentDelivery().id;
 
     private JPanel smallerButton(JButton button) throws IOException {
         JPanel smallPanel = new JPanel();
@@ -22,21 +29,21 @@ public class DeliverInfoPanel extends JPanel {
         return smallPanel;
     }
 
-    public DeliverInfoPanel() throws IOException {
+    public DeliverInfoPanel(MapPanel mapViewer) throws IOException {
 
         setLayout(new BorderLayout());
         setBackground(ColorUtil.BACKGROUND_COLOR);
         setPreferredSize(new Dimension(400, 800));
 
-        JLabel title = new JLabel("Order #12345");
+        JLabel title = new JLabel("Order #" + CacheManager.getCurrentPackage().id);
         title.setFont(new Font("Arial", Font.BOLD, 24));
         title.setForeground(ColorUtil.TEXT_COLOR);
 
-        JLabel address = new JLabel("Idk laan 2");
+        JLabel address = new JLabel(CacheManager.getCurrentPackage().address);
         address.setFont(new Font("Arial", Font.PLAIN, 18));
         address.setForeground(ColorUtil.TEXT_COLOR);
 
-        JLabel name = new JLabel("Persoon Achternaam");
+        JLabel name = new JLabel(CacheManager.getCurrentPackage().name);
         name.setFont(new Font("Arial", Font.PLAIN, 18));
         name.setForeground(ColorUtil.TEXT_COLOR);
 
@@ -84,7 +91,17 @@ public class DeliverInfoPanel extends JPanel {
         complete.setForeground(ColorUtil.BACKGROUND_COLOR);
         complete.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
         complete.addActionListener(e -> {
-            JOptionPane.showMessageDialog(null, "Order #12345 is completed", "Order Completed", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Order #"+ CacheManager.getCurrentPackage().id + " completed", "Order Completed", JOptionPane.INFORMATION_MESSAGE);
+            try {
+                CacheManager.deliverPackage();
+                resetWaypoints(mapViewer, new GeoPosition(CacheManager.getCurrentDelivery().startLatitude, CacheManager.getCurrentDelivery().startLongitude), new GeoPosition(CacheManager.getCurrentDelivery().endLatitude, CacheManager.getCurrentDelivery().endLongitude));
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+            repaint();
+            title.setText("Order #" + CacheManager.getCurrentPackage().id);
+            address.setText(CacheManager.getCurrentPackage().address);
+            name.setText(CacheManager.getCurrentPackage().name);
         });
         buttonPanel.add(smallerButton(complete));
 
@@ -93,7 +110,17 @@ public class DeliverInfoPanel extends JPanel {
         notHome.setForeground(ColorUtil.BACKGROUND_COLOR);
         notHome.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
         notHome.addActionListener(e -> {
-            JOptionPane.showMessageDialog(null, "Order #12345 is marked as not home", "Not Home", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Order #"+ CacheManager.getCurrentPackage().id + " is marked as not home", "Not Home", JOptionPane.INFORMATION_MESSAGE);
+            try {
+                CacheManager.notHomePackage();
+                resetWaypoints(mapViewer, new GeoPosition(CacheManager.getCurrentDelivery().startLatitude, CacheManager.getCurrentDelivery().startLongitude), new GeoPosition(CacheManager.getCurrentDelivery().endLatitude, CacheManager.getCurrentDelivery().endLongitude));
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+            repaint();
+            title.setText("Order #" + CacheManager.getCurrentPackage().id);
+            address.setText(CacheManager.getCurrentPackage().address);
+            name.setText(CacheManager.getCurrentPackage().name);
         });
         buttonPanel.add(smallerButton(notHome));
 
@@ -102,7 +129,17 @@ public class DeliverInfoPanel extends JPanel {
         cancel.setForeground(ColorUtil.BACKGROUND_COLOR);
         cancel.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
         cancel.addActionListener(e -> {
-            JOptionPane.showMessageDialog(null, "Order #12345 is cancelled", "Order Cancelled", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Order #"+ CacheManager.getCurrentPackage().id + " is cancelled", "Order Cancelled", JOptionPane.INFORMATION_MESSAGE);
+            try {
+                CacheManager.skipPackage();
+                resetWaypoints(mapViewer, new GeoPosition(CacheManager.getCurrentDelivery().startLatitude, CacheManager.getCurrentDelivery().startLongitude), new GeoPosition(CacheManager.getCurrentDelivery().endLatitude, CacheManager.getCurrentDelivery().endLongitude));
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+            repaint();
+            title.setText("Order #" + CacheManager.getCurrentPackage().id);
+            address.setText(CacheManager.getCurrentPackage().address);
+            name.setText(CacheManager.getCurrentPackage().name);
         });
         buttonPanel.add(smallerButton(cancel));
 
@@ -112,9 +149,24 @@ public class DeliverInfoPanel extends JPanel {
         support.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
         support.addActionListener(e -> {
             new SupportModal();
+            repaint();
+            title.setText("Order #" + CacheManager.getCurrentPackage().id);
+            address.setText(CacheManager.getCurrentPackage().address);
+            name.setText(CacheManager.getCurrentPackage().name);
         });
         buttonPanel.add(smallerButton(support));
 
         add(buttonPanel, BorderLayout.SOUTH);
+    }
+
+    public static void resetWaypoints(MapPanel panel, GeoPosition start, GeoPosition end) throws IOException {
+        /*panel.clearWaypoints(); // Clear the old waypoints
+
+        // Add new waypoints
+        panel.addWaypoint(new Waypoint(start));
+        for (WebHelper.WebPackage p : CacheManager.getCurrentDelivery().packages) {
+            panel.addWaypoint(new Waypoint(new GeoPosition(p.latitude, p.longitude), new Package(p.address, p.name, 1, 1, 1, 1, 1)));
+        }
+        panel.addWaypoint(new Waypoint(end));*/
     }
 }

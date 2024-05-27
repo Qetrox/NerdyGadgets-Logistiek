@@ -28,7 +28,7 @@ public class WebServer {
      */
     public WebServer() throws IOException {
         startTimestamp = (int) (System.currentTimeMillis());
-        this.server = HttpServer.create(new InetSocketAddress(8081), 0);
+        this.server = HttpServer.create(new InetSocketAddress(8082), 0);
         this.server.setExecutor(threadPoolExecutor);
     }
 
@@ -42,6 +42,7 @@ public class WebServer {
         this.server.createContext("/login", new LoginHandler());
         this.server.createContext("/manager/bestellingen", new BestellingenHandler());
         this.server.createContext("/getroute", new RouteHandler());
+        this.server.createContext("/updatepackage", new RouteHandler());
     }
 
     /**

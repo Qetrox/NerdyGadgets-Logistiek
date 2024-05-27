@@ -19,6 +19,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class RouteHandler implements HttpHandler {
 
@@ -32,6 +33,13 @@ public class RouteHandler implements HttpHandler {
         try {
 
             WebHelper.WebDelivery route = DeliveryRoutes.getRoute();
+            if(route == null) {
+                exchange.sendResponseHeaders(404, 0);
+                exchange.getResponseBody().close();
+                return;
+            }
+
+            route.driverId = Objects.requireNonNull(AuthHelper.getToken(WebHelper.queryToMap(exchange.getRequestURI().getQuery()).get("token"))).id;
 
             GsonBuilder builder = new GsonBuilder();
             builder.setPrettyPrinting();
