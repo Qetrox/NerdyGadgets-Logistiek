@@ -1,4 +1,4 @@
-package nl.nerdygadgets.logistiek.util.web;
+package nl.nerdygadgets.util;
 
 import java.io.BufferedReader;
 import java.io.IOException;

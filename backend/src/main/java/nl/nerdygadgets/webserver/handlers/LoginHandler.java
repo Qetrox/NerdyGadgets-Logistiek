@@ -1,5 +1,7 @@
 package nl.nerdygadgets.webserver.handlers;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import nl.nerdygadgets.Main;
@@ -21,49 +23,54 @@ public class LoginHandler implements HttpHandler {
 
         // get query parameters
         Map<String, String> params = WebHelper.queryToMap(exchange.getRequestURI().getQuery());
+        try {
+            String username = params.get("username");
+            String password = params.get("password");
 
-        for(String key : params.keySet()) {
-            System.out.println(key + " = " + params.get(key));
-        }
+            if(username == null || password == null) {
+                exchange.sendResponseHeaders(400, 0);
+                exchange.getResponseBody().close();
+                return;
+            }
 
-        //String username = exchange.getRequestHeaders().getFirst("username");
-        //String password = exchange.getRequestHeaders().getFirst("password");
+            WebHelper.WebToken token = tryLogin(username, password);
+            if(token == null) {
+                exchange.sendResponseHeaders(403, 0);
+                exchange.getResponseBody().close();
+                return;
+            }
 
-        String username = params.get("username");
-        String password = params.get("password");
+            System.out.println("Logged in: " + token.id + " as manager: " + token.isManager);
+
+            try {
+
+                GsonBuilder builder = new GsonBuilder();
+                builder.setPrettyPrinting();
+                Gson gson = builder.create();
+
+                String res = gson.toJson(token, WebHelper.WebToken.class);
 
 
-        if(username == null || password == null) {
+                // Code 200 om aan te geven dat het OK is, en de lengte van wat we gaan terugsturen
+                exchange.sendResponseHeaders(200, res.length());
+
+                // Stuur alle data
+                exchange.getResponseBody().write(res.toString().getBytes());
+                exchange.getResponseBody().flush();
+                exchange.getResponseBody().close();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        } catch (NullPointerException e) {
             exchange.sendResponseHeaders(400, 0);
             exchange.getResponseBody().close();
             return;
         }
-
-        String token = tryLogin(username, password);
-        if(token == null) {
-            exchange.sendResponseHeaders(403, 0);
-            exchange.getResponseBody().close();
-            return;
-        }
-
-        try {
-            StringBuilder res = new StringBuilder();
-            res.append(token);
-
-            // Code 200 om aan te geven dat het OK is, en de lengte van wat we gaan terugsturen
-            exchange.sendResponseHeaders(200, res.length());
-
-            // Stuur alle data
-            exchange.getResponseBody().write(res.toString().getBytes());
-            exchange.getResponseBody().flush();
-            exchange.getResponseBody().close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
-    private static String tryLogin(String username, String password) {
+    private static WebHelper.WebToken tryLogin(String username, String password) {
         DatabaseConnector conn = Main.getDatabaseConnection();
         ResultSet rs = null;
         Statement stmt = null;
@@ -74,7 +81,7 @@ public class LoginHandler implements HttpHandler {
             rs = conn.query("SELECT * FROM employee WHERE username = '" + username + "' AND password = '" + password + "'");
             if (rs.next()) {
                 // create a token
-                String token = AuthHelper.generateToken(rs.getInt("employeeId"));
+                WebHelper.WebToken token = AuthHelper.generateToken(rs.getInt("employeeId"), rs.getInt("isManager") == 1);
                 DatabaseConnector.CloseVars(stmt, rs, connection);
                 return token;
             }
