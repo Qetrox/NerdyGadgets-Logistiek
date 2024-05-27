@@ -1,6 +1,7 @@
 package nl.nerdygadgets;
 
 import nl.nerdygadgets.util.DatabaseConnector;
+import nl.nerdygadgets.util.DeliveryRoutes;
 import nl.nerdygadgets.webserver.WebServer;
 
 import java.io.IOException;
@@ -28,6 +29,9 @@ public class Main {
         /* Database stuff */
         conn = new DatabaseConnector();
         conn.execute("USE u127250p176374_nerdygadgets");
+
+        DeliveryRoutes.handlePackagesFromDatabase();
+        DeliveryRoutes.createRoutes();
 
     }
 

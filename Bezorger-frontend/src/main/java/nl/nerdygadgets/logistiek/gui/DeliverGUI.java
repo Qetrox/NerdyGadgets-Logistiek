@@ -4,7 +4,9 @@ import nl.nerdygadgets.logistiek.delivery.Package;
 import nl.nerdygadgets.logistiek.gui.panels.DeliverInfoPanel;
 import nl.nerdygadgets.logistiek.gui.panels.MapPanel;
 import nl.nerdygadgets.logistiek.gui.waypoint.Waypoint;
+import nl.nerdygadgets.logistiek.util.CacheManager;
 import nl.nerdygadgets.logistiek.util.DefaultJFrame;
+import nl.nerdygadgets.logistiek.util.web.WebHelper;
 import org.jxmapviewer.viewer.GeoPosition;
 
 import java.awt.*;
@@ -35,11 +37,20 @@ public class DeliverGUI extends DefaultJFrame {
         MapPanel mapViewer = new MapPanel();
         DeliverInfoPanel deliverInfoPanel = new DeliverInfoPanel();
 
-        mapViewer.addWaypoint(new Waypoint(new GeoPosition(52.3843322878619, 5.137340734129197), new Package("Idk laan 2", "Persoon", 1, 1, 1, 1, 1)));
-        mapViewer.addWaypoint(new Waypoint(new GeoPosition(52.377011026016035, 5.1755491265934825), new Package("Idk laan 1", "Persoon", 1, 1, 1, 1, 1)));
-        mapViewer.addWaypoint(new Waypoint(new GeoPosition(52.37556412545035, 5.2157946499848915), new Package("Idk laan 3", "Persoon", 1, 1, 1, 1, 1)));
-        mapViewer.addWaypoint(new Waypoint(new GeoPosition(52.50798283349655, 5.469818870113745), new Package("Idk laan 4", "Persoon", 1, 1, 1, 1, 1)));
+        WebHelper.WebDelivery route = CacheManager.getCurrentDelivery();
 
+        //zet start waypoint
+        mapViewer.addWaypoint(new Waypoint(new GeoPosition(route.startLatitude, route.startLongitude)));
+
+
+        for(WebHelper.WebPackage p : route.packages) {
+
+            mapViewer.addWaypoint(new Waypoint(new GeoPosition(p.latitude, p.longitude), new Package(p.address, p.name, 1, 1, 1, 1, 1)));
+
+        }
+
+        //zet eind waypoint
+        mapViewer.addWaypoint(new Waypoint(new GeoPosition(route.startLatitude, route.startLongitude)));
 
         setLayout(new BorderLayout(0,0));
 

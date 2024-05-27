@@ -3,9 +3,7 @@ package nl.nerdygadgets.util;
 import com.sun.net.httpserver.HttpExchange;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -111,15 +109,15 @@ public class WebHelper {
         return false;
     }
     public static class WebDelivery {
-        public int id;
+        public long id;
         public int driverId;
         public ArrayList<WebPackage> packages= new ArrayList<>();
-        public int startLatitude;
-        public int startLongitude;
-        public int endLatitude;
-        public int endLongitude;
+        public double startLatitude;
+        public double startLongitude;
+        public double endLatitude;
+        public double endLongitude;
 
-        public WebDelivery(int id, int driverId, int startLatitude, int startLongitude, int endLatitude, int endLongitude) {
+        public WebDelivery(long id, int driverId, double startLatitude, double startLongitude, double endLatitude, double endLongitude) {
             this.id = id;
             this.driverId = driverId;
             this.startLatitude = startLatitude;
@@ -137,8 +135,18 @@ public class WebHelper {
     public static class WebPackage {
         public int id;
         public String name;
-        public int latitude;
-        public int longitude;
+        public double latitude;
+        public double longitude;
+        public String address;
+
+        public WebPackage(int id, String name, double latitude, double longitude, String adress) {
+            this.id = id;
+            this.name = name;
+            this.latitude = latitude;
+            this.longitude = longitude;
+            this.address = adress;
+        }
+
     }
 
     public static class WebToken {
@@ -157,7 +165,6 @@ public class WebHelper {
     public static class WebOrder {
         public int id;
         public String date;
-
         public String firstName;
         public String lastName;
         public String email;

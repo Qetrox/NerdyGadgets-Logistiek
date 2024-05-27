@@ -8,6 +8,7 @@ import com.sun.net.httpserver.HttpHandler;
 import nl.nerdygadgets.Main;
 import nl.nerdygadgets.util.AuthHelper;
 import nl.nerdygadgets.util.DatabaseConnector;
+import nl.nerdygadgets.util.DeliveryRoutes;
 import nl.nerdygadgets.util.WebHelper;
 
 import java.io.IOException;
@@ -27,6 +28,23 @@ public class RouteHandler implements HttpHandler {
         if(!WebHelper.handleTokenRequirement(exchange)) {
             return;
         }
+
+        try {
+
+            WebHelper.WebDelivery route = DeliveryRoutes.getRoute();
+
+            GsonBuilder builder = new GsonBuilder();
+            builder.setPrettyPrinting();
+            Gson gson = builder.create();
+
+            String res = gson.toJson(route);
+
+            exchange.sendResponseHeaders(200, res.length());
+            exchange.getResponseBody().write(res.getBytes());
+            exchange.getResponseBody().flush();
+            exchange.getResponseBody().close();
+
+            System.out.println("RouteHandler");
 
 
         } catch (Exception e) {
