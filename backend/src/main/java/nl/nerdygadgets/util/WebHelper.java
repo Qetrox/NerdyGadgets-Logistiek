@@ -3,6 +3,7 @@ package nl.nerdygadgets.util;
 import com.sun.net.httpserver.HttpExchange;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -108,6 +109,36 @@ public class WebHelper {
             e.printStackTrace();
         }
         return false;
+    }
+    public static class WebDelivery {
+        public int id;
+        public int driverId;
+        public ArrayList<WebPackage> packages= new ArrayList<>();
+        public int startLatitude;
+        public int startLongitude;
+        public int endLatitude;
+        public int endLongitude;
+
+        public WebDelivery(int id, int driverId, int startLatitude, int startLongitude, int endLatitude, int endLongitude) {
+            this.id = id;
+            this.driverId = driverId;
+            this.startLatitude = startLatitude;
+            this.startLongitude = startLongitude;
+            this.endLatitude = endLatitude;
+            this.endLongitude = endLongitude;
+        }
+
+        public void addPackage(WebPackage p) {
+            packages.add(p);
+        }
+
+    }
+
+    public static class WebPackage {
+        public int id;
+        public String name;
+        public int latitude;
+        public int longitude;
     }
 
     public static class WebToken {
