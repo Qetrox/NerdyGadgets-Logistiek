@@ -55,7 +55,7 @@ public class AuthHelper {
      * @param i De lengte van de string
      * @return De gegenereerde string
      */
-    private static String generateRandomString(int i) {
+    public static String generateRandomString(int i) {
         return RandomStringUtils.random(i, 0, 0, true, true, null, new SecureRandom());
     }
 
