@@ -28,16 +28,14 @@ public class Manger_overzicht_list {
     private JPanel panel;
     private JSplitPane splitPane;
 
-    public static void main(String[] args) {
+    public static void init() {
         SwingUtilities.invokeLater(() -> {
             // Login and fetch data before launching the main UI
-            if (login()) {
-                String ordersJson = fetchOrders();
-                if (ordersJson != null) {
-                    new Manger_overzicht_list(ordersJson);
-                } else {
-                    JOptionPane.showMessageDialog(null, "Failed to fetch orders", "Error", JOptionPane.ERROR_MESSAGE);
-                }
+            String ordersJson = fetchOrders();
+            if (ordersJson != null) {
+                new Manger_overzicht_list(ordersJson);
+            } else {
+                JOptionPane.showMessageDialog(null, "Failed to fetch orders", "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
     }
@@ -65,7 +63,7 @@ public class Manger_overzicht_list {
             }
         });
 
-        tableModel.addColumn("Order");
+        tableModel.addColumn("Bestelling");
         tableModel.addColumn("Klant Naam");
         tableModel.addColumn("Klant Adres");
         tableModel.addColumn("Bezorger");
@@ -109,28 +107,6 @@ public class Manger_overzicht_list {
         // Add orders to the DefaultListModel
         for (Order order : ordersMap.values()) {
             model.addElement(order);
-        }
-    }
-
-    private static boolean login() {
-        try {
-            URL url = new URL("https://api.nerdy-gadgets.nl/login?username=testuser&password=cool");
-            String response = getRequest(url);
-            if (response == null) {
-                JOptionPane.showMessageDialog(null, "Incorrecte inloggegevens", "Fout", JOptionPane.ERROR_MESSAGE);
-                return false;
-            }
-
-            GsonBuilder builder = new GsonBuilder();
-            builder.setPrettyPrinting();
-            WebHelper.WebToken token = builder.create().fromJson(response, WebHelper.WebToken.class);
-            CacheManager.setToken(token);
-            return true;
-        } catch (MalformedURLException ex) {
-            throw new RuntimeException(ex);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
         }
     }
 

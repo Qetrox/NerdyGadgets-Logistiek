@@ -7,7 +7,7 @@ import javax.swing.*;
 public class Main {
     public static void main(String[] args) {
 
-        Manger_overzicht_list.main(args);
-//        Manager_log_in.main(args);
+//        Manger_overzicht_list.main(args);
+        Manager_log_in.main(args);
     }
 }

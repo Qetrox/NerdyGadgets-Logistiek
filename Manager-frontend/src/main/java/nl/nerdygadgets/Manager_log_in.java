@@ -1,11 +1,21 @@
 package nl.nerdygadgets;
 
+import com.google.gson.GsonBuilder;
+import nl.nerdygadgets.util.CacheManager;
+import nl.nerdygadgets.util.WebHelper;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Objects;
 import java.util.Properties;
 import javax.mail.*;
 import javax.mail.internet.*;
+
+import static nl.nerdygadgets.util.WebHelper.getRequest;
 
 public class Manager_log_in {
     // Correct email en password
@@ -114,7 +124,27 @@ public class Manager_log_in {
         login.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Verkrijg het ingevoerde wachtwoord en email
+                try {
+                    String enteredPassword = new String(password.getPassword());
+                    String enteredEmail = email.getText();
+                    URL url = new URL("https://api.nerdy-gadgets.nl/login?username="+ enteredEmail +"&password="+ enteredPassword +"&manager=true");
+                    String response = getRequest(url);
+                    if (response == null) {
+                        // fout
+                        JOptionPane.showMessageDialog(panel, "Toegang geweigerd");
+                       return;
+                    }
+                    showNewPanel(frame, enteredEmail, enteredPassword);
+                    return;
+                    //
+
+
+                } catch (MalformedURLException ex) {
+                    throw new RuntimeException(ex);
+                } catch (IOException ee) {
+                    ee.printStackTrace();
+                }
+                /*/ Verkrijg het ingevoerde wachtwoord en email
                 String enteredPassword = new String(password.getPassword());
                 String enteredEmail = email.getText();
 
@@ -124,15 +154,17 @@ public class Manager_log_in {
                     showNewPanel(frame);
 //                    Code voor het sturen van de email. werkt alleen nog niet.
                     int generatedCode = code();
-//                    sendEmail(generatedCode, email.getText());
+//                    sendEmail2fcode(generatedCode, email.getText());
                 } else {
                     JOptionPane.showMessageDialog(panel, "Toegang geweigerd");
                 }
+            }*/
             }
         });
         forgot.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
                 String enteredemail = email.getText();
                 if (enteredemail.equals(correctEmail)){
                     System.out.println("email gestuurd naar: " + enteredemail);
@@ -143,7 +175,7 @@ public class Manager_log_in {
         });
     }
 
-    private static void showNewPanel(JFrame frame) {
+    private static void showNewPanel(JFrame frame, String username, String password) {
         // Maak een nieuw panel
         JPanel panel1 = new JPanel(new FlowLayout());
         // Verwijder het huidige panel en voeg het nieuwe panel toe
@@ -160,6 +192,14 @@ public class Manager_log_in {
         JButton verify = new JButton("Verify");
         verify.setBounds(110, 130, 100, 30);
         panel1.add(verify);
+
+        JButton resend = new JButton("resend");
+        resend.setBounds(110,170,100,30);
+        panel1.add(resend);
+
+        JButton cancel = new JButton("cancel");
+        cancel.setBounds(110, 210, 100, 30);
+        panel1.add(cancel);
 
         twoFcode.addFocusListener(new FocusListener() {
             @Override
@@ -193,15 +233,68 @@ public class Manager_log_in {
                 // Verkrijg het ingevoerde wachtwoord en email
                 int enteredCode = Integer.parseInt(twoFcode.getText());
 
+                try {
+                    URL url = new URL("https://api.nerdy-gadgets.nl/login?username="+ username +"&password="+ password +"&manager=true&code=" + enteredCode);
+                    String response = getRequest(url);
+                    if (response == null) {
+                        JOptionPane.showMessageDialog(null, "Incorrecte inloggegevens", "Fout", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+
+                    GsonBuilder builder = new GsonBuilder();
+                    builder.setPrettyPrinting();
+                    WebHelper.WebToken token = builder.create().fromJson(response, WebHelper.WebToken.class);
+                    CacheManager.setToken(token);
+
+                    System.out.println(token.id);
+                    frame.dispose();
+                    Manger_overzicht_list.init();
+                } catch (MalformedURLException ex) {
+                    throw new RuntimeException(ex);
+                } catch (IOException ee) {
+                    ee.printStackTrace();
+                }
+
                 // Controleer of ze correct zijn
-                if (enteredCode == code) {
+                /*if (enteredCode == code) {
                     JOptionPane.showMessageDialog(panel1, "Toegang verleend.");
                     frame.dispose();
                     Manger_overzicht_list.main(new String[0]);
 //                    Openen_Scherm_Log_in();
                 } else {
                     JOptionPane.showMessageDialog(panel1, "Toegang geweigerd");
+                }*/
+            }
+        });
+        resend.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    URL url = new URL("https://api.nerdy-gadgets.nl/login?username="+ username +"&password="+ password +"&manager=true");
+                    String response = getRequest(url);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
                 }
+            }
+        });
+
+        cancel.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.dispose();
+                JFrame frame = new JFrame("Manager ui");
+                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                frame.setSize(400, 400);
+
+                // Maak een JPanel aan
+                JPanel panel = new JPanel();
+                frame.add(panel);
+                placeComponents(frame, panel);
+
+                // Zet het frame zichtbaar
+                frame.setVisible(true);
+
             }
         });
 
