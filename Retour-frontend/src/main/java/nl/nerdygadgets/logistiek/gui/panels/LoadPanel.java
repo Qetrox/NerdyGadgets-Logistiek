@@ -11,7 +11,7 @@ import java.io.IOException;
 
 public class LoadPanel extends JPanel {
 
-    final BufferedImage image = ImageIO.read(new File("src/main/resources/images/logo.png"));
+    final BufferedImage image = ImageIO.read(new File("src/main/resources/images/fortnite.jpg"));
 
     public LoadPanel() throws IOException {
         setLayout(new GridLayout(1, 1));

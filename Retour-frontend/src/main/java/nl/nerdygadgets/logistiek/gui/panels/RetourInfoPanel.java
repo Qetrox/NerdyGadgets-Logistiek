@@ -76,26 +76,8 @@ public class RetourInfoPanel extends JPanel {
         JPanel buttonPanel = new JPanel();
         buttonPanel.setPreferredSize(new Dimension(400, 140));
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
-        buttonPanel.setLayout(new GridLayout(2, 2));
+        buttonPanel.setLayout(new GridLayout(1, 2));
         buttonPanel.setBackground(ColorUtil.BACKGROUND_COLOR);
-
-        JButton complete = new JButton("Complete Order");
-        complete.setBackground(ColorUtil.TEXT_COLOR);
-        complete.setForeground(ColorUtil.BACKGROUND_COLOR);
-        complete.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
-        complete.addActionListener(e -> {
-            JOptionPane.showMessageDialog(null, "Order #12345 is completed", "Order Completed", JOptionPane.INFORMATION_MESSAGE);
-        });
-        buttonPanel.add(smallerButton(complete));
-
-        JButton notHome = new JButton("Not Home");
-        notHome.setBackground(ColorUtil.TEXT_COLOR);
-        notHome.setForeground(ColorUtil.BACKGROUND_COLOR);
-        notHome.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
-        notHome.addActionListener(e -> {
-            JOptionPane.showMessageDialog(null, "Order #12345 is marked as not home", "Not Home", JOptionPane.INFORMATION_MESSAGE);
-        });
-        buttonPanel.add(smallerButton(notHome));
 
         JButton cancel = new JButton("Cancel Order");
         cancel.setBackground(ColorUtil.TEXT_COLOR);

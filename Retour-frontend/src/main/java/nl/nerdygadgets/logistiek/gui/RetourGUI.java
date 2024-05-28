@@ -7,6 +7,7 @@ import java.awt.*;
 import java.io.IOException;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 public class RetourGUI extends DefaultJFrame {
 
@@ -42,18 +43,36 @@ public class RetourGUI extends DefaultJFrame {
 }
 
 class RMATable extends JPanel {
+    private JTable table;
+    private DefaultTableModel model;
+    private TableRowSorter<DefaultTableModel> sorter;
 
     public RMATable() {
         setLayout(new BorderLayout());
 
+        JPanel searchPanel = new JPanel();
+        searchPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+
+        JLabel searchLabel = new JLabel("Search:");
+        JTextField searchField = new JTextField(20);
+        JButton searchButton = new JButton("Search");
+        JButton clearButton = new JButton("Clear");
+
+        searchPanel.add(searchLabel);
+        searchPanel.add(searchField);
+        searchPanel.add(searchButton);
+        searchPanel.add(clearButton);
+
+        add(searchPanel, BorderLayout.NORTH);
+
         String[] columnNames = {"Retour ID", "Order ID", "Customer Name", "Created on Date", "Products", "Resolution Type", "Returns Reason", "Handled"};
 
         Object[][] data = {
-                {"#408", "#1003", "Karen kik", "Nov 21, 2017", "Fortnite battle pass", "Refund", "Wrong Color", false},
+                {"#408", "#1003", "Karen kik", "Nov 21, 2017", "Fortnite battle pass", "Refund", "Wrong Color", true},
                 {"#407", "#1003", "Bob bob", "Oct 20, 2017", "Fortnite golden scar", "Refund", "Wrong Color", false}
         };
 
-        DefaultTableModel model = new DefaultTableModel(data, columnNames) {
+        model = new DefaultTableModel(data, columnNames) {
             @Override
             public Class<?> getColumnClass(int column) {
                 if (column == 7) {
@@ -64,11 +83,13 @@ class RMATable extends JPanel {
 
             @Override
             public boolean isCellEditable(int row, int column) {
-                return column == 5 || column == 7; // Make only "Resolution Type" and "Request Status" columns editable
+                return column == 5 || column == 7;
             }
         };
 
-        JTable table = new JTable(model);
+        table = new JTable(model);
+        sorter = new TableRowSorter<>(model);
+        table.setRowSorter(sorter);
 
         String[] resolutionOptions = {"Refund", "Refund (Store Credit)", "Exchange Product", "No Refund"};
         JComboBox<String> resolutionComboBox = new JComboBox<>(resolutionOptions);
@@ -79,5 +100,19 @@ class RMATable extends JPanel {
 
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.CENTER);
+
+        searchButton.addActionListener(e -> {
+            String searchText = searchField.getText();
+            if (searchText.trim().length() == 0) {
+                sorter.setRowFilter(null);
+            } else {
+                sorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchText, 0, 2));
+            }
+        });
+
+        clearButton.addActionListener(e -> {
+            searchField.setText("");
+            sorter.setRowFilter(null);
+        });
     }
 }
