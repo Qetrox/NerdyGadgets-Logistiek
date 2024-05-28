@@ -1,5 +1,6 @@
 package nl.nerdygadgets.logistiek.gui;
 
+import nl.nerdygadgets.logistiek.gui.panels.Headpanel;
 import nl.nerdygadgets.logistiek.gui.panels.RetourInfoPanel;
 import nl.nerdygadgets.logistiek.util.DefaultJFrame;
 
@@ -18,16 +19,26 @@ public class RetourGUI extends DefaultJFrame {
         if (gd.isFullScreenSupported()) {
             setUndecorated(true);
             gd.setFullScreenWindow(this);
+            setSize(1200, 800);
         } else {
             setSize(1200, 800);
         }
         setResizable(false);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new BorderLayout());
+
+        Headpanel Headpanel = new Headpanel();
+        getContentPane().add(Headpanel, BorderLayout.NORTH);
+
+        JPanel mainPanel = new JPanel(new BorderLayout());
 
         RetourInfoPanel retourInfoPanel = new RetourInfoPanel();
-        getContentPane().add(retourInfoPanel, BorderLayout.EAST);
+        mainPanel.add(retourInfoPanel, BorderLayout.EAST);
 
         RMATable rmaTable = new RMATable();
-        getContentPane().add(rmaTable, BorderLayout.CENTER);
+        mainPanel.add(rmaTable, BorderLayout.CENTER);
+
+        getContentPane().add(mainPanel, BorderLayout.CENTER);
     }
 
     public static void main(String[] args) {

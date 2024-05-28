@@ -27,6 +27,9 @@ public class RetourInfoPanel extends JPanel {
         setLayout(new BorderLayout());
         setBackground(ColorUtil.BACKGROUND_COLOR);
         setPreferredSize(new Dimension(400, 800));
+        JLabel label = new JLabel("Retour Informatie");
+        label.setHorizontalAlignment(SwingConstants.CENTER);
+        add(label, BorderLayout.CENTER);
 
         JLabel title = new JLabel("Order #12345");
         title.setFont(new Font("Arial", Font.BOLD, 24));
@@ -40,7 +43,7 @@ public class RetourInfoPanel extends JPanel {
         name.setFont(new Font("Arial", Font.PLAIN, 18));
         name.setForeground(ColorUtil.TEXT_COLOR);
 
-        //
+        /*
         JButton closeButton = new JButton("X");
         closeButton.setForeground(Color.WHITE);
         closeButton.setFocusPainted(false);
@@ -53,7 +56,7 @@ public class RetourInfoPanel extends JPanel {
             JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
             frame.dispose();
         });
-        //
+        */
 
         JPanel infoPanel = new JPanel(new GridLayout(3, 1));
         infoPanel.setBackground(ColorUtil.BACKGROUND_COLOR);
@@ -62,14 +65,14 @@ public class RetourInfoPanel extends JPanel {
         infoPanel.add(address);
         infoPanel.add(name);
 
-        JPanel closePanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        /*JPanel closePanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         closePanel.setBackground(ColorUtil.BACKGROUND_COLOR);
         closePanel.add(closeButton);
+         */
 
         JPanel topPanel = new JPanel(new BorderLayout());
         topPanel.setBackground(ColorUtil.BACKGROUND_COLOR);
         topPanel.add(infoPanel, BorderLayout.CENTER);
-        topPanel.add(closePanel, BorderLayout.NORTH);
 
         add(topPanel, BorderLayout.NORTH);
 

@@ -15,11 +15,11 @@ public class RetourLoadGUI extends DefaultJFrame {
         super("Logistiek");
         GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
         if (gd.isFullScreenSupported()) {
-            setUndecorated(true);
-            gd.setFullScreenWindow(this);
+            //setUndecorated(true);
+            //gd.setFullScreenWindow(this);
+            setSize(1200, 800);
         } else {
-            setSize(12000, 8000);
-
+            setSize(1200, 800);
         };
         setResizable(false);
         getContentPane().add(new LoadPanel());
