@@ -94,6 +94,7 @@ public class WebHelper {
                     try {
                         exchange.sendResponseHeaders(403, 0);
                         exchange.getResponseBody().close();
+                        return false;
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
