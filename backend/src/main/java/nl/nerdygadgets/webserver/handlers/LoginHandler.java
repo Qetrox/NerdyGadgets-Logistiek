@@ -11,10 +11,7 @@ import nl.nerdygadgets.util.DatabaseConnector;
 import nl.nerdygadgets.util.web.WebHelper;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -172,29 +169,24 @@ public class LoginHandler implements HttpHandler {
     private static String tryManagerEmail(String username, String password) {
         DatabaseConnector conn = Main.getDatabaseConnection();
         ResultSet rs = null;
-        Statement stmt = null;
+        PreparedStatement stmt = null;
         Connection connection = null;
         try {
             connection = conn.getConnection();
-            stmt = connection.createStatement();
-            rs = conn.query("SELECT * FROM employee WHERE username = '" + username + "' AND password = '" + password + "'");
+            stmt = connection.prepareStatement("SELECT * FROM employee WHERE username = ? AND password = ?");
+            stmt.setString(1, username);
+            stmt.setString(2, password);
+            rs = stmt.executeQuery();
             if (rs.next()) {
-                // create a token
-
                 if(!rs.getBoolean("isManager")) {
                     DatabaseConnector.CloseVars(stmt, rs, connection);
                     return null;
                 }
-
                 String email = rs.getString("email");
-
                 DatabaseConnector.CloseVars(stmt, rs, connection);
                 return email;
             }
-
             DatabaseConnector.CloseVars(stmt, rs, connection);
-            return null;
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -204,22 +196,20 @@ public class LoginHandler implements HttpHandler {
     private static WebHelper.WebToken tryLogin(String username, String password, boolean isManager) {
         DatabaseConnector conn = Main.getDatabaseConnection();
         ResultSet rs = null;
-        Statement stmt = null;
+        PreparedStatement stmt = null;
         Connection connection = null;
         try {
             connection = conn.getConnection();
-            stmt = connection.createStatement();
-            rs = conn.query("SELECT * FROM employee WHERE username = '" + username + "' AND password = '" + password + "'");
+            stmt = connection.prepareStatement("SELECT * FROM employee WHERE username = ? AND password = ?");
+            stmt.setString(1, username);
+            stmt.setString(2, password);
+            rs = stmt.executeQuery();
             if (rs.next()) {
-                // create a token
                 WebHelper.WebToken token = AuthHelper.generateToken(rs.getInt("employeeId"), isManager);
                 DatabaseConnector.CloseVars(stmt, rs, connection);
                 return token;
             }
-
             DatabaseConnector.CloseVars(stmt, rs, connection);
-            return null;
-
         } catch (SQLException e) {
             e.printStackTrace();
         }

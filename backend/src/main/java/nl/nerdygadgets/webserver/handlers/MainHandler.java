@@ -22,8 +22,6 @@ public class MainHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
 
-        DatabaseConnector conn = Main.getDatabaseConnection();
-
         String res = "{\"success\":true}";
 
         // Code 200 om aan te geven dat het OK is, en de lengte van wat we gaan terugsturen
