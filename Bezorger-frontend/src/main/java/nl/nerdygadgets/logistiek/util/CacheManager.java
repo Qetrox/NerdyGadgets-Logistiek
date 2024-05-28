@@ -36,13 +36,13 @@ public class CacheManager {
     public static void deliverPackage() throws IOException {
         if(!CacheManager.currentDelivery.packages.isEmpty()) {
             CacheManager.updatePackageStatus(CacheManager.currentPackage, PackageStatus.DELIVERED);
-            HttpUtil.getRequest(new URL("https://api.nerdy-gadgets.nl/updatePackage?id=" + CacheManager.currentDelivery.id + "&status=DELIVERED&token=" + CacheManager.getToken().token + "&packageId=" + CacheManager.currentPackage.id));
+            HttpUtil.getRequest(new URL("https://api.nerdy-gadgets.nl/updatepackage?id=" + CacheManager.currentDelivery.id + "&status=DELIVERED&token=" + CacheManager.getToken().token + "&packageId=" + CacheManager.currentPackage.id));
             CacheManager.clearCurrentPackage();
             for(WebHelper.WebPackage p : CacheManager.currentDelivery.packages) {
                 if(CacheManager.getPackageStatus(p) == PackageStatus.UNDELIVERED) {
                     CacheManager.setCurrentPackage(p);
                     CacheManager.updatePackageStatus(p, PackageStatus.IN_TRANSIT);
-                    HttpUtil.getRequest(new URL("https://api.nerdy-gadgets.nl/updatePackage?id=" + CacheManager.currentDelivery.id + "&status=IN_TRANSIT&token=" + CacheManager.getToken().token + "&packageId=" + p.id));
+                    HttpUtil.getRequest(new URL("https://api.nerdy-gadgets.nl/updatepackage?id=" + CacheManager.currentDelivery.id + "&status=IN_TRANSIT&token=" + CacheManager.getToken().token + "&packageId=" + p.id));
                     break;
                 }
             }
@@ -50,13 +50,13 @@ public class CacheManager {
     }
     public static void notHomePackage() throws IOException {
         CacheManager.updatePackageStatus(CacheManager.currentPackage, PackageStatus.NOT_HOME);
-        HttpUtil.getRequest(new URL("https://api.nerdy-gadgets.nl/updatePackage?id=" + CacheManager.currentDelivery.id + "&status=NOT_HOME&token=" + CacheManager.getToken().token + "&packageId=" + CacheManager.currentPackage.id));
+        HttpUtil.getRequest(new URL("https://api.nerdy-gadgets.nl/updatepackage?id=" + CacheManager.currentDelivery.id + "&status=NOT_HOME&token=" + CacheManager.getToken().token + "&packageId=" + CacheManager.currentPackage.id));
         CacheManager.clearCurrentPackage();
         for(WebHelper.WebPackage p : CacheManager.currentDelivery.packages) {
             if(CacheManager.getPackageStatus(p) == PackageStatus.UNDELIVERED) {
                 CacheManager.setCurrentPackage(p);
                 CacheManager.updatePackageStatus(p, PackageStatus.IN_TRANSIT);
-                HttpUtil.getRequest(new URL("https://api.nerdy-gadgets.nl/updatePackage?id=" + CacheManager.currentDelivery.id + "&status=IN_TRANSIT&token=" + CacheManager.getToken().token + "&packageId=" + p.id));
+                HttpUtil.getRequest(new URL("https://api.nerdy-gadgets.nl/updatepackage?id=" + CacheManager.currentDelivery.id + "&status=IN_TRANSIT&token=" + CacheManager.getToken().token + "&packageId=" + p.id));
                 break;
             }
         }
@@ -64,13 +64,13 @@ public class CacheManager {
 
     public static void skipPackage() throws IOException {
         CacheManager.updatePackageStatus(CacheManager.currentPackage, PackageStatus.UNKNOWN);
-        HttpUtil.getRequest(new URL("https://api.nerdy-gadgets.nl/updatePackage?id=" + CacheManager.currentDelivery.id + "&status=UNKNOWN&token=" + CacheManager.getToken().token + "&packageId=" + CacheManager.currentPackage.id));
+        HttpUtil.getRequest(new URL("https://api.nerdy-gadgets.nl/updatepackage?id=" + CacheManager.currentDelivery.id + "&status=UNKNOWN&token=" + CacheManager.getToken().token + "&packageId=" + CacheManager.currentPackage.id));
         CacheManager.clearCurrentPackage();
         for(WebHelper.WebPackage p : CacheManager.currentDelivery.packages) {
             if(CacheManager.getPackageStatus(p) == PackageStatus.UNDELIVERED) {
                 CacheManager.setCurrentPackage(p);
                 CacheManager.updatePackageStatus(p, PackageStatus.IN_TRANSIT);
-                HttpUtil.getRequest(new URL("https://api.nerdy-gadgets.nl/updatePackage?id=" + CacheManager.currentDelivery.id + "&status=IN_TRANSIT&token=" + CacheManager.getToken().token + "&packageId=" + p.id));
+                HttpUtil.getRequest(new URL("https://api.nerdy-gadgets.nl/updatepackage?id=" + CacheManager.currentDelivery.id + "&status=IN_TRANSIT&token=" + CacheManager.getToken().token + "&packageId=" + p.id));
                 break;
             }
         }

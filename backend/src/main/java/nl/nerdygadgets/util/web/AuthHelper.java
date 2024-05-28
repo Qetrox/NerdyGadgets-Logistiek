@@ -1,12 +1,11 @@
-package nl.nerdygadgets.util;
+package nl.nerdygadgets.util.web;
 
+import nl.nerdygadgets.util.web.WebHelper;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class AuthHelper {
 

@@ -2,23 +2,13 @@ package nl.nerdygadgets.webserver.handlers;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import nl.nerdygadgets.Main;
-import nl.nerdygadgets.util.AuthHelper;
-import nl.nerdygadgets.util.DatabaseConnector;
-import nl.nerdygadgets.util.DeliveryRoutes;
-import nl.nerdygadgets.util.WebHelper;
+import nl.nerdygadgets.util.web.AuthHelper;
+import nl.nerdygadgets.util.delivery.DeliveryRoutes;
+import nl.nerdygadgets.util.web.WebHelper;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 public class RouteHandler implements HttpHandler {
@@ -39,7 +29,10 @@ public class RouteHandler implements HttpHandler {
                 return;
             }
 
-            route.driverId = Objects.requireNonNull(AuthHelper.getToken(WebHelper.queryToMap(exchange.getRequestURI().getQuery()).get("token"))).id;
+            WebHelper.WebToken token = AuthHelper.getToken(WebHelper.queryToMap(exchange.getRequestURI().getQuery()).get("token"));
+
+            assert token != null;
+            route.driverId = token.id;
 
             GsonBuilder builder = new GsonBuilder();
             builder.setPrettyPrinting();

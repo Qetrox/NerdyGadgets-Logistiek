@@ -1,7 +1,7 @@
 package nl.nerdygadgets;
 
 import nl.nerdygadgets.util.DatabaseConnector;
-import nl.nerdygadgets.util.DeliveryRoutes;
+import nl.nerdygadgets.util.delivery.DeliveryRoutes;
 import nl.nerdygadgets.webserver.WebServer;
 
 import java.io.IOException;

@@ -6,17 +6,14 @@ import com.google.gson.reflect.TypeToken;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import nl.nerdygadgets.Main;
-import nl.nerdygadgets.util.AuthHelper;
 import nl.nerdygadgets.util.DatabaseConnector;
-import nl.nerdygadgets.util.WebHelper;
+import nl.nerdygadgets.util.web.WebHelper;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 

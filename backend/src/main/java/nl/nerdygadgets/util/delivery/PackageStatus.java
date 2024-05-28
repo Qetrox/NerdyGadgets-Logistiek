@@ -1,4 +1,4 @@
-package nl.nerdygadgets.util;
+package nl.nerdygadgets.util.delivery;
 
 public enum PackageStatus {
 

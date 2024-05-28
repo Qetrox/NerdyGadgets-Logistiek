@@ -5,6 +5,7 @@ import nl.nerdygadgets.util.Log;
 import nl.nerdygadgets.webserver.handlers.LoginHandler;
 import nl.nerdygadgets.webserver.handlers.MainHandler;
 import nl.nerdygadgets.webserver.handlers.RouteHandler;
+import nl.nerdygadgets.webserver.handlers.UpdatePackageHandler;
 import nl.nerdygadgets.webserver.handlers.manager.BestellingenHandler;
 
 import java.io.IOException;
@@ -42,7 +43,7 @@ public class WebServer {
         this.server.createContext("/login", new LoginHandler());
         this.server.createContext("/manager/bestellingen", new BestellingenHandler());
         this.server.createContext("/getroute", new RouteHandler());
-        this.server.createContext("/updatepackage", new RouteHandler());
+        this.server.createContext("/updatepackage", new UpdatePackageHandler());
     }
 
     /**

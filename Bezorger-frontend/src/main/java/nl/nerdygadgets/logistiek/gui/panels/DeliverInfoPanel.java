@@ -10,6 +10,7 @@ import org.jxmapviewer.viewer.GeoPosition;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 
 public class DeliverInfoPanel extends JPanel {
@@ -58,7 +59,7 @@ public class DeliverInfoPanel extends JPanel {
         closeButton.setBorderPainted(false);
         closeButton.addActionListener(e -> {
             JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
-            frame.dispose();
+            frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING)); // deze stopt de applicatie ipv alleen het scherm te laten verdwijnen.
         });
         //
 

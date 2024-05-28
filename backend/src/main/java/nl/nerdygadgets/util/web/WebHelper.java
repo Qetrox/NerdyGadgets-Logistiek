@@ -1,4 +1,4 @@
-package nl.nerdygadgets.util;
+package nl.nerdygadgets.util.web;
 
 import com.sun.net.httpserver.HttpExchange;
 
@@ -125,6 +125,10 @@ public class WebHelper {
             this.endLatitude = endLatitude;
             this.endLongitude = endLongitude;
         }
+        @Override
+        public String toString() {
+            return "Delivery: " + id + " Driver: " + driverId + " Start: " + startLatitude + ", " + startLongitude + " End: " + endLatitude + ", " + endLongitude;
+        }
 
         public void addPackage(WebPackage p) {
             packages.add(p);
@@ -134,17 +138,19 @@ public class WebHelper {
 
     public static class WebPackage {
         public int id;
+        public int userId;
         public String name;
         public double latitude;
         public double longitude;
         public String address;
 
-        public WebPackage(int id, String name, double latitude, double longitude, String adress) {
+        public WebPackage(int id, String name, double latitude, double longitude, String adress, int userId) {
             this.id = id;
             this.name = name;
             this.latitude = latitude;
             this.longitude = longitude;
             this.address = adress;
+            this.userId = userId;
         }
 
     }
@@ -158,6 +164,11 @@ public class WebHelper {
             this.token = token;
             this.isManager = isManager;
             this.id = id;
+        }
+
+        @Override
+        public String toString() {
+            return "Token: " + token + " Manager: " + isManager + " ID: " + id;
         }
 
     }

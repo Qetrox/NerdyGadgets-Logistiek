@@ -1,14 +1,15 @@
-package nl.nerdygadgets.util;
+package nl.nerdygadgets.util.delivery;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import nl.nerdygadgets.Main;
+import nl.nerdygadgets.util.DatabaseConnector;
+import nl.nerdygadgets.util.web.HttpUtil;
+import nl.nerdygadgets.util.web.WebHelper;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.http.HttpResponse;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -37,12 +38,15 @@ public class DeliveryRoutes {
         Connection connection = conn.getConnection();
 
         Statement stmt = connection.createStatement();
-        ResultSet rs = conn.query("SELECT a.id, a.order_date, CONCAT(b.first_name, ' ', b.surname) as name, b.street_name, b.apartment_nr, b.postal_code, b.city FROM `order` as a JOIN user as b ON a.user_id = b.id;");
+        ResultSet rs = conn.query("SELECT a.id, a.order_date, CONCAT(b.first_name, ' ', b.surname) as name, a.user_id, b.street_name, b.apartment_nr, b.postal_code, b.city FROM `order` as a JOIN user as b ON a.user_id = b.id;");
 
         int resultCount = 0;
         int validCount = 0;
 
         while (rs.next()) {
+            if(validCount >= 21) { //TODO: alleen voor testen gebruiken!!!!
+                break;
+            }
             resultCount++;
             String street = rs.getString("street_name");
             String apartment = rs.getString("apartment_nr");
@@ -71,7 +75,8 @@ public class DeliveryRoutes {
                     rs.getString("name"),
                     latitude,
                     longitude,
-                    address
+                    address,
+                    rs.getInt("user_id")
             );
 
             packagesToDeliver.add(pack);
@@ -117,7 +122,8 @@ public class DeliveryRoutes {
 
     public static WebHelper.WebDelivery getRoute(int driverId) {
         for(WebHelper.WebDelivery delivery : routes.keySet()) {
-            if(delivery.driverId == driverId && routes.get(delivery)) {
+            System.out.println(delivery.driverId + " " + driverId);
+            if(delivery.driverId == driverId) {
                 return delivery;
             }
         }

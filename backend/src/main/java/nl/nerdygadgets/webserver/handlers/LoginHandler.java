@@ -5,9 +5,9 @@ import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import nl.nerdygadgets.Main;
-import nl.nerdygadgets.util.AuthHelper;
+import nl.nerdygadgets.util.web.AuthHelper;
 import nl.nerdygadgets.util.DatabaseConnector;
-import nl.nerdygadgets.util.WebHelper;
+import nl.nerdygadgets.util.web.WebHelper;
 
 import java.io.IOException;
 import java.sql.Connection;
