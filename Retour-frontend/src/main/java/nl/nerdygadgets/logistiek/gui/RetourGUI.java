@@ -91,13 +91,6 @@ class RMATable extends JPanel {
         sorter = new TableRowSorter<>(model);
         table.setRowSorter(sorter);
 
-        String[] resolutionOptions = {"Refund", "Refund (Store Credit)", "Exchange Product", "No Refund"};
-        JComboBox<String> resolutionComboBox = new JComboBox<>(resolutionOptions);
-        table.getColumn("Resolution Type").setCellEditor(new DefaultCellEditor(resolutionComboBox));
-
-        table.getColumn("Handled").setCellRenderer(table.getDefaultRenderer(Boolean.class));
-        table.getColumn("Handled").setCellEditor(table.getDefaultEditor(Boolean.class));
-
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.CENTER);
 

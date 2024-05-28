@@ -21,6 +21,7 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter'
     implementation 'org.jxmapviewer:jxmapviewer2:2.8'
     implementation 'com.graphhopper:graphhopper-core:9.0'
+    implementation 'com.google.code.gson:gson:2.11.0'
 }
 
 test {

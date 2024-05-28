@@ -79,14 +79,11 @@ public class RetourInfoPanel extends JPanel {
         buttonPanel.setLayout(new GridLayout(1, 2));
         buttonPanel.setBackground(ColorUtil.BACKGROUND_COLOR);
 
-        JButton cancel = new JButton("Cancel Order");
-        cancel.setBackground(ColorUtil.TEXT_COLOR);
-        cancel.setForeground(ColorUtil.BACKGROUND_COLOR);
-        cancel.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
-        cancel.addActionListener(e -> {
-            JOptionPane.showMessageDialog(null, "Order #12345 is cancelled", "Order Cancelled", JOptionPane.INFORMATION_MESSAGE);
-        });
-        buttonPanel.add(smallerButton(cancel));
+        JButton resolve = new JButton("Resolve");
+        resolve.setBackground(ColorUtil.TEXT_COLOR);
+        resolve.setForeground(ColorUtil.BACKGROUND_COLOR);
+        resolve.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
+        buttonPanel.add(smallerButton(resolve));
 
         JButton support = new JButton("Support");
         support.setBackground(ColorUtil.TEXT_COLOR);
