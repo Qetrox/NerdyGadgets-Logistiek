@@ -8,13 +8,25 @@ public class Headpanel extends JPanel {
     public Headpanel() {
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 
-        JButton homeButton = new JButton("Home");
-        JButton returnsButton = new JButton("Returns");
-        JButton reportsButton = new JButton("Reports");
-        JButton settingsButton = new JButton("Settings");
-        JButton supportButton = new JButton("Get Support");
-
+        JButton homeButton = createStyledButton("Home");
+        JButton returnsButton = createStyledButton("Returns");
+        JButton reportsButton = createStyledButton("Reports");
+        JButton settingsButton = createStyledButton("Settings");
+        JButton supportButton = createStyledButton("Get Support");
         JButton closeButton = new JButton("X");
+
+        add(homeButton);
+        add(returnsButton);
+        add(reportsButton);
+        add(settingsButton);
+        add(supportButton);
+
+        add(Box.createHorizontalGlue());
+        add(closeButton);
+
+        setBorder(BorderFactory.createEmptyBorder());
+
+        // Style van de Close button alleen
         closeButton.setForeground(Color.BLACK);
         closeButton.setFocusPainted(false);
         closeButton.setOpaque(false);
@@ -26,17 +38,19 @@ public class Headpanel extends JPanel {
             JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
             frame.dispose();
         });
+    }
 
-        add(homeButton);
-        add(returnsButton);
-        add(reportsButton);
-        add(settingsButton);
-        add(supportButton);
-
-        add(Box.createHorizontalGlue());
-        add(closeButton);
-
-        setBorder(BorderFactory.createLineBorder(Color.BLACK));
+    // Style van alle buttons excl. close
+    private JButton createStyledButton(String text) {
+        JButton button = new JButton(text);
+        button.setForeground(Color.BLACK);
+        button.setFont(new Font("", Font.PLAIN, 20));
+        button.setFont(button.getFont().deriveFont(Font.BOLD));
+        button.setContentAreaFilled(false);
+        button.setFocusPainted(false);
+        button.setBorderPainted(false);
+        button.setOpaque(false);
+        return button;
     }
 
     @Override

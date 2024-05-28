@@ -27,9 +27,6 @@ public class RetourGUI extends DefaultJFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        Headpanel Headpanel = new Headpanel();
-        getContentPane().add(Headpanel, BorderLayout.NORTH);
-
         JPanel mainPanel = new JPanel(new BorderLayout());
 
         RetourInfoPanel retourInfoPanel = new RetourInfoPanel();
@@ -39,6 +36,9 @@ public class RetourGUI extends DefaultJFrame {
         mainPanel.add(rmaTable, BorderLayout.CENTER);
 
         getContentPane().add(mainPanel, BorderLayout.CENTER);
+
+        Headpanel Headpanel = new Headpanel();
+        getContentPane().add(Headpanel, BorderLayout.NORTH);
     }
 
     public static void main(String[] args) {
@@ -103,6 +103,7 @@ class RMATable extends JPanel {
         table.setRowSorter(sorter);
 
         JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder()); // Set empty border
         add(scrollPane, BorderLayout.CENTER);
 
         searchButton.addActionListener(e -> {
