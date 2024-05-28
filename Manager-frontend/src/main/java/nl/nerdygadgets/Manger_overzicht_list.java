@@ -65,7 +65,7 @@ public class Manger_overzicht_list {
             }
         });
 
-        tableModel.addColumn("Order");
+        tableModel.addColumn("Bestelling");
         tableModel.addColumn("Klant Naam");
         tableModel.addColumn("Klant Adres");
         tableModel.addColumn("Bezorger");
