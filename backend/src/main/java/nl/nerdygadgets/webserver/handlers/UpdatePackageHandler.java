@@ -11,10 +11,7 @@ import nl.nerdygadgets.util.delivery.PackageStatus;
 import nl.nerdygadgets.util.web.WebHelper;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.Map;
 
 public class UpdatePackageHandler implements HttpHandler {
@@ -89,8 +86,9 @@ public class UpdatePackageHandler implements HttpHandler {
         DatabaseConnector conn = Main.getDatabaseConnection();
         Connection connection = conn.getConnection();
 
-        Statement stmt = connection.createStatement();
-        ResultSet rs = conn.query("SELECT email FROM user WHERE id = " + userId);
+        PreparedStatement stmt = connection.prepareStatement("SELECT email FROM user WHERE id = ?");
+        stmt.setInt(1, userId);
+        ResultSet rs = stmt.executeQuery();
 
         if(rs.next()) {
             String email = rs.getString("email");
