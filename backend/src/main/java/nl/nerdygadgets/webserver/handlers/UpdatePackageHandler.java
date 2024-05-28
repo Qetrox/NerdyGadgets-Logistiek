@@ -101,15 +101,15 @@ public class UpdatePackageHandler implements HttpHandler {
 
             switch(packageStatus) {
                 case DELIVERED:
-                    message = "We hebben je pakket #" + pack.id + " bezorgd om " + time + " bij je bezorgd.\n\nBezorgadres:\n" + pack.address + "\n\n\nMet vriendelijke groet,\nNerdyGadgets";
+                    message = "We hebben je pakket #" + pack.id + " om " + time + " bij je bezorgd.\n\nBezorgadres:\n" + pack.address + "\n\n\nMet vriendelijke groet,\nNerdyGadgets";
                     subject = "Je pakket #" + pack.id + " is bezorgd!";
                     break;
                 case NOT_HOME:
-                    message = "We hebben je pakket #" + pack.id + " bezorgd om niet kunnen bezorgen. We proberen het later nog een keer.\n\nBezorgadres:\n" + pack.address + "\n\n\nMet vriendelijke groet,\nNerdyGadgets";
+                    message = "We hebben je pakket #" + pack.id + " niet kunnen bezorgen. We proberen het later nog een keer.\n\nBezorgadres:\n" + pack.address + "\n\n\nMet vriendelijke groet,\nNerdyGadgets";
                     subject = "Je pakket #" + pack.id + " hebben we niet kunnen bezorgen!";
                     break;
                 case UNKNOWN:
-                    message = "We hebben je pakket #" + pack.id + " bezorgd om niet kunnen bezorgen vanwege redenen. Neem contact met ons op.\n\nBezorgadres:\n" + pack.address + "\n\n\nMet vriendelijke groet,\nNerdyGadgets";
+                    message = "We hebben je pakket #" + pack.id + " niet kunnen bezorgen vanwege redenen. Neem contact met ons op.\n\nBezorgadres:\n" + pack.address + "\n\n\nMet vriendelijke groet,\nNerdyGadgets";
                     subject = "Je pakket #" + pack.id + " hebben we niet kunnen bezorgen!";
                     break;
                 case IN_TRANSIT:
