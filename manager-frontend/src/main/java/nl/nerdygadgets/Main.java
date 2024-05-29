@@ -1,13 +1,9 @@
 package nl.nerdygadgets;
 
-import javax.swing.*;
+import nl.nerdygadgets.gui.Manager_log_in;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
-
-//        Manger_overzicht_list.main(args);
-        Manager_log_in.main(args);
+        new Manager_log_in();
     }
 }

@@ -1,4 +1,4 @@
-package nl.nerdygadgets;
+package nl.nerdygadgets.util.pakket;
 
 public class Size {
 
