@@ -1,10 +1,11 @@
-package nl.nerdygadgets;
+package nl.nerdygadgets.gui;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import nl.nerdygadgets.util.CacheManager;
+import nl.nerdygadgets.util.HttpUtil;
 import nl.nerdygadgets.util.WebHelper;
 
 import javax.swing.*;
@@ -28,19 +29,7 @@ public class Manger_overzicht_list {
     private JPanel panel;
     private JSplitPane splitPane;
 
-    public static void init() {
-        SwingUtilities.invokeLater(() -> {
-            // Login and fetch data before launching the main UI
-            String ordersJson = fetchOrders();
-            if (ordersJson != null) {
-                new Manger_overzicht_list(ordersJson);
-            } else {
-                JOptionPane.showMessageDialog(null, "Failed to fetch orders", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        });
-    }
-
-    public Manger_overzicht_list(String jsonResponse) {
+    public Manger_overzicht_list() {
         frame = new JFrame("Storage");
         list = new JList<>();
         model = new DefaultListModel<>();
@@ -52,8 +41,7 @@ public class Manger_overzicht_list {
 
         list.setModel(model);
 
-        // Parse JSON and populate the model
-        populateOrdersFromJson(jsonResponse);
+        populateOrdersFromJson();
 
         list.getSelectionModel().addListSelectionListener(e -> {
             Order o = list.getSelectedValue();
@@ -80,7 +68,15 @@ public class Manger_overzicht_list {
         frame.setVisible(true);
     }
 
-    private void populateOrdersFromJson(String jsonResponse) {
+    private void populateOrdersFromJson() {
+
+        String jsonResponse = fetchOrders();
+
+        if(jsonResponse == null) {
+            JOptionPane.showMessageDialog(null, "Failed to fetch orders", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
         // Parse JSON string
         JsonObject jsonObject = JsonParser.parseString(jsonResponse).getAsJsonObject();
 
@@ -114,7 +110,7 @@ public class Manger_overzicht_list {
         try {
             String urlStr = "https://api.nerdy-gadgets.nl/manager/bestellingen?token=" + CacheManager.getToken().token;
             URL url = new URL(urlStr);
-            return getRequest(url);
+            return HttpUtil.getRequest(url);
         } catch (MalformedURLException e) {
             e.printStackTrace();
             return null;
@@ -122,24 +118,6 @@ public class Manger_overzicht_list {
             e.printStackTrace();
             return null;
         }
-    }
-
-    public static String getRequest(URL url) throws IOException {
-        HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setRequestMethod("GET");
-        con.connect();
-        if (con.getResponseCode() != 200) {
-            return null;
-        }
-        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-        String inputLine;
-        StringBuilder content = new StringBuilder();
-        while ((inputLine = in.readLine()) != null) {
-            content.append(inputLine);
-        }
-        in.close();
-        con.disconnect();
-        return content.toString();
     }
 
     private class Order {

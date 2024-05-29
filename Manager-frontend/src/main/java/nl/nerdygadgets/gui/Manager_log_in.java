@@ -1,7 +1,8 @@
-package nl.nerdygadgets;
+package nl.nerdygadgets.gui;
 
 import com.google.gson.GsonBuilder;
 import nl.nerdygadgets.util.CacheManager;
+import nl.nerdygadgets.util.HttpUtil;
 import nl.nerdygadgets.util.WebHelper;
 
 import javax.swing.*;
@@ -10,19 +11,10 @@ import java.awt.event.*;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Objects;
-import java.util.Properties;
-import javax.mail.*;
-import javax.mail.internet.*;
-
-import static nl.nerdygadgets.util.WebHelper.getRequest;
 
 public class Manager_log_in {
-    // Correct email en password
-    private static String correctEmail = "Email";
-    private static String correctPassword = "Password";
-    private static int code;
-    public static void main(String[] args) {
+
+    public Manager_log_in() {
         // Maak een JFrame aan
         JFrame frame = new JFrame("Manager ui");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -36,19 +28,7 @@ public class Manager_log_in {
         // Zet het frame zichtbaar
         frame.setVisible(true);
     }
-    public static int code(){
-        StringBuilder randomNumberString = new StringBuilder();
 
-        for (int i = 0; i < 5; i++) {
-            int randomDigit = (int) (Math.random() * 10); // Willekeurig cijfer tussen 0 en 9
-            randomNumberString.append(randomDigit);
-        }
-
-        // Converteer de StringBuilder naar een int
-        code = Integer.parseInt(randomNumberString.toString());
-        System.out.println(code);
-        return code;
-    }
     private static void placeComponents(JFrame frame, JPanel panel) {
         panel.setLayout(null);
 
@@ -128,7 +108,7 @@ public class Manager_log_in {
                     String enteredPassword = new String(password.getPassword());
                     String enteredEmail = email.getText();
                     URL url = new URL("https://api.nerdy-gadgets.nl/login?username="+ enteredEmail +"&password="+ enteredPassword +"&manager=true");
-                    String response = getRequest(url);
+                    String response = HttpUtil.getRequest(url);
                     if (response == null) {
                         // fout
                         JOptionPane.showMessageDialog(panel, "Toegang geweigerd");
@@ -144,33 +124,6 @@ public class Manager_log_in {
                 } catch (IOException ee) {
                     ee.printStackTrace();
                 }
-                /*/ Verkrijg het ingevoerde wachtwoord en email
-                String enteredPassword = new String(password.getPassword());
-                String enteredEmail = email.getText();
-
-                // Controleer of ze correct zijn
-                if (enteredPassword.equals(correctPassword) && enteredEmail.equals(correctEmail)) {
-                    JOptionPane.showMessageDialog(panel, "Toegang verleend.");
-                    showNewPanel(frame);
-//                    Code voor het sturen van de email. werkt alleen nog niet.
-                    int generatedCode = code();
-//                    sendEmail2fcode(generatedCode, email.getText());
-                } else {
-                    JOptionPane.showMessageDialog(panel, "Toegang geweigerd");
-                }
-            }*/
-            }
-        });
-        forgot.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-                String enteredemail = email.getText();
-                if (enteredemail.equals(correctEmail)){
-                    System.out.println("email gestuurd naar: " + enteredemail);
-//                send_Forgot_Email(enteredemail);
-                }
-
             }
         });
     }
@@ -235,7 +188,7 @@ public class Manager_log_in {
 
                 try {
                     URL url = new URL("https://api.nerdy-gadgets.nl/login?username="+ username +"&password="+ password +"&manager=true&code=" + enteredCode);
-                    String response = getRequest(url);
+                    String response = HttpUtil.getRequest(url);
                     if (response == null) {
                         JOptionPane.showMessageDialog(null, "Incorrecte inloggegevens", "Fout", JOptionPane.ERROR_MESSAGE);
                         return;
@@ -249,22 +202,14 @@ public class Manager_log_in {
 
                     System.out.println(token.id);
                     frame.dispose();
-                    Manger_overzicht_list.init();
+
+                    new Manger_overzicht_list();
+
                 } catch (MalformedURLException ex) {
                     throw new RuntimeException(ex);
                 } catch (IOException ee) {
                     ee.printStackTrace();
                 }
-
-                // Controleer of ze correct zijn
-                /*if (enteredCode == code) {
-                    JOptionPane.showMessageDialog(panel1, "Toegang verleend.");
-                    frame.dispose();
-                    Manger_overzicht_list.main(new String[0]);
-//                    Openen_Scherm_Log_in();
-                } else {
-                    JOptionPane.showMessageDialog(panel1, "Toegang geweigerd");
-                }*/
             }
         });
         resend.addActionListener(new ActionListener() {
@@ -272,7 +217,7 @@ public class Manager_log_in {
             public void actionPerformed(ActionEvent e) {
                 try {
                     URL url = new URL("https://api.nerdy-gadgets.nl/login?username="+ username +"&password="+ password +"&manager=true");
-                    String response = getRequest(url);
+                    String response = HttpUtil.getRequest(url);
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
@@ -297,89 +242,5 @@ public class Manager_log_in {
 
             }
         });
-
     }
-    private static void sendEmail2fcode(int generatedCode, String enteredEmail) {
-        final String host = "smtp.gmail.com";
-        final String port = "587";
-        final String username = "username";
-        final String password = "Password";
-
-        // Onderwerp van de e-mail
-        final String subject = "Uw verificatiecode";
-        final String body = "Uw verificatiecode is: " + generatedCode;
-
-        // Instellen van SMTP server eigenschappen
-        Properties properties = new Properties();
-        properties.put("mail.smtp.auth", "true");
-        properties.put("mail.smtp.starttls.enable", "true");
-        properties.put("mail.smtp.host", host);
-        properties.put("mail.smtp.port", port);
-
-        // Authenticeren en verkrijgen van de sessie
-        Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(username, password);
-            }
-        });
-
-        try {
-            // Creëren van de e-mail boodschap
-            Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(username));
-            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(enteredEmail));
-            message.setSubject(subject);
-            message.setText(body);
-
-            // Versturen van de e-mail
-            Transport.send(message);
-
-            System.out.println("E-mail is succesvol verstuurd!");
-
-        } catch (MessagingException e) {
-            throw new RuntimeException(e);
-        }
-    }
-    private static void send_Forgot_Email(String enteredEmail) {
-        final String host = "smtp.gmail.com";
-        final String port = "587";
-        final String username = "username";
-        final String password = "Password";
-
-        // Onderwerp van de e-mail
-        final String subject = "Vergeten wachtwoord";
-        final String body = "Uw wachtwoord is: " + correctPassword;
-
-        // Instellen van SMTP server eigenschappen
-        Properties properties = new Properties();
-        properties.put("mail.smtp.auth", "true");
-        properties.put("mail.smtp.starttls.enable", "true");
-        properties.put("mail.smtp.host", host);
-        properties.put("mail.smtp.port", port);
-
-        // Authenticeren en verkrijgen van de sessie
-        Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(username, password);
-            }
-        });
-
-        try {
-            // Creëren van de e-mail boodschap
-            Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(username));
-            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(enteredEmail));
-            message.setSubject(subject);
-            message.setText(body);
-
-            // Versturen van de e-mail
-            Transport.send(message);
-
-            System.out.println("E-mail is succesvol verstuurd!");
-
-        } catch (MessagingException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
 }

@@ -1,4 +1,6 @@
-package nl.nerdygadgets;
+package nl.nerdygadgets.util.pakket;
+
+import nl.nerdygadgets.util.pakket.Size;
 
 public class Package {
 
