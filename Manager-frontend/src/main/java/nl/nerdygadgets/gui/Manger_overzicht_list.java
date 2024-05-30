@@ -1,19 +1,17 @@
 package nl.nerdygadgets.gui;
 
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import nl.nerdygadgets.util.CacheManager;
 import nl.nerdygadgets.util.HttpUtil;
-import nl.nerdygadgets.util.WebHelper;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
-import java.io.BufferedReader;
+import javax.swing.table.TableColumnModel;
+import java.awt.*;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
@@ -22,91 +20,91 @@ import java.util.TreeMap;
 public class Manger_overzicht_list {
 
     private JFrame frame;
-    private JList<Order> list;
-    private DefaultListModel<Order> model;
-    private JTable table;
+    private JList<Order> orderList;
+    private DefaultListModel<Order> listModel;
+    private JTable orderTable;
     private DefaultTableModel tableModel;
     private JPanel panel;
     private JSplitPane splitPane;
 
     public Manger_overzicht_list() {
+        initializeComponents();
+        setupLayout();
+        fetchAndPopulateOrders();
+        addEventListeners();
+        displayFrame();
+    }
+
+    private void initializeComponents() {
         frame = new JFrame("Storage");
-        list = new JList<>();
-        model = new DefaultListModel<>();
-
-        table = new JTable();
+        orderList = new JList<>();
+        listModel = new DefaultListModel<>();
+        orderTable = new JTable();
         tableModel = new DefaultTableModel();
-        panel = new JPanel();
-        splitPane = new JSplitPane();
+        panel = new JPanel(new BorderLayout(10, 10));
+        splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 
-        list.setModel(model);
-
-        populateOrdersFromJson();
-
-        list.getSelectionModel().addListSelectionListener(e -> {
-            Order o = list.getSelectedValue();
-            if (o != null) {
-                tableModel.setRowCount(0); // Clear the table
-                tableModel.addRow(new Object[]{o.getOrder(), o.getKlantNaam(), o.getKlantAdres(), o.getBezorger()});
-            }
-        });
-
+        orderList.setModel(listModel);
         tableModel.addColumn("Bestelling");
         tableModel.addColumn("Klant Naam");
         tableModel.addColumn("Klant Adres");
         tableModel.addColumn("Bezorger");
-        table.setModel(tableModel);
+        orderTable.setModel(tableModel);
 
-        splitPane.setLeftComponent(new JScrollPane(list));
-        panel.add(new JScrollPane(table));
-        splitPane.setRightComponent(panel);
-
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.add(splitPane);
-        frame.pack();
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
+        // Styling the table
+        orderTable.setFillsViewportHeight(true);
+        orderTable.setGridColor(Color.LIGHT_GRAY);
+        orderTable.setRowHeight(25);
+        TableColumnModel columnModel = orderTable.getColumnModel();
+        columnModel.getColumn(0).setPreferredWidth(100);
+        columnModel.getColumn(1).setPreferredWidth(150);
+        columnModel.getColumn(2).setPreferredWidth(250);
+        columnModel.getColumn(3).setPreferredWidth(100);
     }
 
-    private void populateOrdersFromJson() {
+    private void setupLayout() {
+        splitPane.setLeftComponent(new JScrollPane(orderList));
+        panel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        panel.add(new JScrollPane(orderTable), BorderLayout.CENTER);
+        splitPane.setRightComponent(panel);
+        splitPane.setDividerLocation(250);
 
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setSize(900, 600);
+        frame.setLayout(new BorderLayout());
+        frame.add(splitPane, BorderLayout.CENTER);
+        frame.setLocationRelativeTo(null);
+    }
+
+    private void fetchAndPopulateOrders() {
         String jsonResponse = fetchOrders();
-
-        if(jsonResponse == null) {
-            JOptionPane.showMessageDialog(null, "Failed to fetch orders", "Error", JOptionPane.ERROR_MESSAGE);
+        if (jsonResponse == null) {
+            showErrorDialog("Failed to fetch orders");
             return;
         }
 
-        // Parse JSON string
-        JsonObject jsonObject = JsonParser.parseString(jsonResponse).getAsJsonObject();
-
-        // TreeMap to store orders sorted by ID
-        TreeMap<Integer, Order> ordersMap = new TreeMap<>();
-
-        // Iterate over the JSON object keys
-        for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
-            int id = Integer.parseInt(entry.getKey());
-            JsonObject orderJson = entry.getValue().getAsJsonObject();
-
-            // Create an Order object
-            Order order = new Order(
-                    "Bestelling " + id,
-                    orderJson.get("firstName").getAsString() + " " + orderJson.get("lastName").getAsString(),
-                    orderJson.get("streetName").getAsString() + " " + orderJson.get("apartmentNumber").getAsString() + ", " + orderJson.get("postalCode").getAsString() + " " + orderJson.get("city").getAsString(),
-                    "Bezorger" // Replace with actual bezorger field if available
-            );
-
-            // Add the order to the TreeMap
-            ordersMap.put(id, order);
-        }
-
-        // Add orders to the DefaultListModel
+        TreeMap<Integer, Order> ordersMap = parseOrdersFromJson(jsonResponse);
         for (Order order : ordersMap.values()) {
-            model.addElement(order);
+            listModel.addElement(order);
         }
     }
 
-    private static String fetchOrders() {
+    private void addEventListeners() {
+        orderList.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                Order selectedOrder = orderList.getSelectedValue();
+                if (selectedOrder != null) {
+                    updateTable(selectedOrder);
+                }
+            }
+        });
+    }
+
+    private void displayFrame() {
+        frame.setVisible(true);
+    }
+
+    private String fetchOrders() {
         try {
             String urlStr = "https://api.nerdy-gadgets.nl/manager/bestellingen?token=" + CacheManager.getToken().token;
             URL url = new URL(urlStr);
@@ -120,11 +118,41 @@ public class Manger_overzicht_list {
         }
     }
 
-    private class Order {
-        String order;
-        String klantNaam;
-        String klantAdres;
-        String bezorger;
+    private TreeMap<Integer, Order> parseOrdersFromJson(String jsonResponse) {
+        JsonObject jsonObject = JsonParser.parseString(jsonResponse).getAsJsonObject();
+        TreeMap<Integer, Order> ordersMap = new TreeMap<>();
+
+        for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
+            int id = Integer.parseInt(entry.getKey());
+            JsonObject orderJson = entry.getValue().getAsJsonObject();
+
+            Order order = new Order(
+                    "Bestelling " + id,
+                    orderJson.get("firstName").getAsString() + " " + orderJson.get("lastName").getAsString(),
+                    orderJson.get("streetName").getAsString() + " " + orderJson.get("apartmentNumber").getAsString() + ", " +
+                            orderJson.get("postalCode").getAsString() + " " + orderJson.get("city").getAsString(),
+                    "Bezorger" // Replace with actual bezorger field if available
+            );
+
+            ordersMap.put(id, order);
+        }
+        return ordersMap;
+    }
+
+    private void updateTable(Order order) {
+        tableModel.setRowCount(0); // Clear the table
+        tableModel.addRow(new Object[]{order.getOrder(), order.getKlantNaam(), order.getKlantAdres(), order.getBezorger()});
+    }
+
+    private void showErrorDialog(String message) {
+        JOptionPane.showMessageDialog(frame, message, "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
+    private static class Order {
+        private final String order;
+        private final String klantNaam;
+        private final String klantAdres;
+        private final String bezorger;
 
         public Order(String order, String klantNaam, String klantAdres, String bezorger) {
             this.order = order;
@@ -153,5 +181,9 @@ public class Manger_overzicht_list {
         public String toString() {
             return order;
         }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(Manger_overzicht_list::new);
     }
 }
