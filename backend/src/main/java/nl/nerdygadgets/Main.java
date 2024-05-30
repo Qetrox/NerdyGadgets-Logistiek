@@ -7,6 +7,9 @@ import nl.nerdygadgets.webserver.WebServer;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import static java.lang.System.exit;
+import static java.lang.System.in;
+
 
 public class Main {
 
