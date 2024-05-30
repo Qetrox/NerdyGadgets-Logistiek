@@ -12,7 +12,6 @@ import javax.swing.table.TableRowSorter;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-
 public class RetourGUI extends DefaultJFrame {
 
     public RetourGUI() throws IOException {
@@ -50,8 +49,6 @@ public class RetourGUI extends DefaultJFrame {
         });
     }
 }
-
-
 
 class RMATable extends JPanel {
     private JTable table;
@@ -110,7 +107,7 @@ class RMATable extends JPanel {
 
         searchButton.addActionListener(e -> {
             String searchText = searchField.getText();
-            if (searchText.trim().length() == 0) {
+            if (searchText.trim().isEmpty()) {
                 sorter.setRowFilter(null);
             } else {
                 sorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchText, 0, 2));
@@ -150,4 +147,13 @@ class RMATable extends JPanel {
             table.setRowSelectionInterval(0, 0);
         }
     }
+}
+
+
+class Reports extends JPanel {
+
+}
+
+class Settings extends JPanel {
+
 }

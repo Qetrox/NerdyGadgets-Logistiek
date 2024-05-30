@@ -79,7 +79,7 @@ public class RetourLoginGUI extends DefaultJFrame {
                 // Gebruik dit om de token te krijgen voor requests etc.
                 // CacheManager.getToken() - returnt de huidige token klasse.
 
-                new RetourGUI();
+                new HomeScreen();
                 this.dispose();
                 parentFrame.dispose();
 

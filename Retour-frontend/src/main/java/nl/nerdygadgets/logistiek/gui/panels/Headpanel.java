@@ -1,5 +1,7 @@
 package nl.nerdygadgets.logistiek.gui.panels;
 
+import nl.nerdygadgets.logistiek.gui.HomeScreen;
+import nl.nerdygadgets.logistiek.gui.RetourGUI;
 import nl.nerdygadgets.logistiek.gui.modals.SupportModal;
 
 import javax.swing.*;
@@ -30,6 +32,10 @@ public class Headpanel extends JPanel {
         add(Box.createHorizontalStrut(10));
         JButton supportButton = createStyledButton("Get Support");
         add(supportButton);
+
+        homeButton.addActionListener(e -> {
+            new HomeScreen().setVisible(true);
+        });
 
         supportButton.addActionListener(e -> {
             new SupportModal();
