@@ -80,7 +80,7 @@ public class RetourInfoPanel extends JPanel {
                 retourId.getText().replace("Retour ID: ", ""),
                 orderId.getText().replace("Order ID: ", ""),
                 customerName.getText().replace("Customer Name: ", ""),
-                date.getText().replace("Date: ", ""),
+                date.getText().replace("Date resolved: ", ""),
                 products.getText().replace("Products: ", ""),
                 resolutionType.getText().replace("Resolution Type: ", ""),
                 returnReason.getText().replace("Return Reason: ", ""),

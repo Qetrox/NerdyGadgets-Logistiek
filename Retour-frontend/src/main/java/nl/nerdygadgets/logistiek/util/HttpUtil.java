@@ -1,4 +1,4 @@
-package nl.nerdygadgets.logistiek.util.web;
+package nl.nerdygadgets.logistiek.util;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,11 +9,10 @@ import java.net.URL;
 public class HttpUtil {
 
     public static String getRequest(URL url) throws IOException {
-
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
         con.connect();
-        if(con.getResponseCode() != 200) {
+        if (con.getResponseCode() != 200) {
             return null;
         }
         BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
@@ -24,7 +23,7 @@ public class HttpUtil {
         }
         in.close();
         con.disconnect();
-
         return content.toString();
     }
+
 }

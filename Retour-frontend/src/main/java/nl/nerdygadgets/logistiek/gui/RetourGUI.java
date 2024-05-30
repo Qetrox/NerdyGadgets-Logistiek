@@ -51,6 +51,8 @@ public class RetourGUI extends DefaultJFrame {
     }
 }
 
+
+
 class RMATable extends JPanel {
     private JTable table;
     private DefaultTableModel model;
@@ -76,7 +78,7 @@ class RMATable extends JPanel {
 
         add(searchPanel, BorderLayout.NORTH);
 
-        String[] columnNames = {"Retour ID", "Order ID", "Customer Name", "Created on Date", "Products", "Resolution Type", "Returns Reason", "Handled"};
+        String[] columnNames = {"Retour ID", "Order ID", "Customer Name", "Resolve date", "Products", "Resolution Type", "Returns Reason", "Handled"};
 
         Object[][] data = {
                 {"#408", "#1003", "Karen kik", "Nov 21, 2017", "Fortnite battle pass", "Refund", "Wrong Color", true},
