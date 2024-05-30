@@ -183,7 +183,5 @@ public class Manger_overzicht_list {
         }
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(Manger_overzicht_list::new);
-    }
+    
 }
