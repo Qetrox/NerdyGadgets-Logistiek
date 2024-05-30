@@ -18,9 +18,9 @@ public class RetourHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
 
-        /*if(!WebHelper.handleTokenRequirement(exchange)) {
+        if(!WebHelper.handleTokenRequirement(exchange)) {
             return;
-        }*/
+        }
 
         System.out.println("RetourHandler");
 
