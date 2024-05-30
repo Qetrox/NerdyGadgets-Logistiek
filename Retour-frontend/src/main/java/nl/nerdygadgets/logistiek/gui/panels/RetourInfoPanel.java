@@ -2,7 +2,9 @@ package nl.nerdygadgets.logistiek.gui.panels;
 
 import javax.swing.*;
 import java.awt.*;
+import nl.nerdygadgets.logistiek.gui.modals.ResolveModal;
 import nl.nerdygadgets.logistiek.gui.modals.SupportModal;
+import javax.swing.table.DefaultTableModel;
 
 public class RetourInfoPanel extends JPanel {
 
@@ -17,6 +19,9 @@ public class RetourInfoPanel extends JPanel {
     private JLabel resolutionType;
     private JLabel returnReason;
     private JLabel handled;
+
+    private DefaultTableModel tableModel;
+    private int selectedRowIndex = -1;
 
     public RetourInfoPanel() {
         setLayout(new BorderLayout());
@@ -63,15 +68,14 @@ public class RetourInfoPanel extends JPanel {
         resolve.setBackground(Color.BLACK);
         resolve.setForeground(Color.WHITE);
         resolve.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
+        resolve.addActionListener(e -> openResolveModal());
         buttonPanel.add(resolve);
 
         JButton support = new JButton("Support");
         support.setBackground(Color.BLACK);
         support.setForeground(Color.WHITE);
         support.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
-        support.addActionListener(e -> {
-            new SupportModal();
-        });
+        support.addActionListener(e -> new SupportModal());
         buttonPanel.add(support);
 
         add(buttonPanel, BorderLayout.SOUTH);
@@ -84,6 +88,43 @@ public class RetourInfoPanel extends JPanel {
         return label;
     }
 
+    private void openResolveModal() {
+        JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+        ResolveModal resolveModal = new ResolveModal(parentFrame,
+                retourId.getText().replace("Retour ID: ", ""),
+                orderId.getText().replace("Order ID: ", ""),
+                customerName.getText().replace("Customer Name: ", ""),
+                date.getText().replace("Date: ", ""),
+                products.getText().replace("Products: ", ""),
+                resolutionType.getText().replace("Resolution Type: ", ""),
+                returnReason.getText().replace("Return Reason: ", ""),
+                handled.getText().replace("Handled: ", "").equals("Yes"));
+
+        resolveModal.setVisible(true);
+
+        if (resolveModal.isResolved()) {
+            updateInfo(resolveModal.getRetourId(),
+                    resolveModal.getOrderId(),
+                    resolveModal.getCustomerName(),
+                    resolveModal.getDate(),
+                    resolveModal.getProducts(),
+                    resolveModal.getResolutionType(),
+                    resolveModal.getReturnReason(),
+                    resolveModal.isHandled());
+
+            if (selectedRowIndex != -1 && tableModel != null) {
+                tableModel.setValueAt(resolveModal.getRetourId(), selectedRowIndex, 0);
+                tableModel.setValueAt(resolveModal.getOrderId(), selectedRowIndex, 1);
+                tableModel.setValueAt(resolveModal.getCustomerName(), selectedRowIndex, 2);
+                tableModel.setValueAt(resolveModal.getDate(), selectedRowIndex, 3);
+                tableModel.setValueAt(resolveModal.getProducts(), selectedRowIndex, 4);
+                tableModel.setValueAt(resolveModal.getResolutionType(), selectedRowIndex, 5);
+                tableModel.setValueAt(resolveModal.getReturnReason(), selectedRowIndex, 6);
+                tableModel.setValueAt(resolveModal.isHandled(), selectedRowIndex, 7);
+            }
+        }
+    }
+
     public void updateInfo(String retourID, String orderID, String customerName, String date, String products, String resolutionType, String returnReason, boolean handled) {
         this.retourId.setText("Retour ID: " + retourID);
         this.orderId.setText("Order ID: " + orderID);
@@ -93,5 +134,13 @@ public class RetourInfoPanel extends JPanel {
         this.resolutionType.setText("Resolution Type: " + resolutionType);
         this.returnReason.setText("Return Reason: " + returnReason);
         this.handled.setText("Handled: " + (handled ? "Yes" : "No"));
+    }
+
+    public void setTableModel(DefaultTableModel tableModel) {
+        this.tableModel = tableModel;
+    }
+
+    public void setSelectedRowIndex(int selectedRowIndex) {
+        this.selectedRowIndex = selectedRowIndex;
     }
 }
