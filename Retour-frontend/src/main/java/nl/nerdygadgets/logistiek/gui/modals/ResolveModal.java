@@ -11,7 +11,7 @@ public class ResolveModal extends JDialog {
     private JTextField customerNameField;
     private JTextField dateField;
     private JTextField productsField;
-    private JTextField resolutionTypeField;
+    private JComboBox<String> ResolutionType;
     private JTextField returnReasonField;
     private JCheckBox handledCheckBox;
     private boolean resolved;
@@ -23,14 +23,17 @@ public class ResolveModal extends JDialog {
 
         add(new JLabel("Retour ID:"));
         retourIdField = new JTextField(retourId);
+        retourIdField.setEditable(false); // Niet te editen
         add(retourIdField);
 
         add(new JLabel("Order ID:"));
         orderIdField = new JTextField(orderId);
+        orderIdField.setEditable(false); // Niet te editen
         add(orderIdField);
 
         add(new JLabel("Customer Name:"));
         customerNameField = new JTextField(customerName);
+        customerNameField.setEditable(false); // Niet te editen
         add(customerNameField);
 
         add(new JLabel("Date:"));
@@ -39,14 +42,17 @@ public class ResolveModal extends JDialog {
 
         add(new JLabel("Products:"));
         productsField = new JTextField(products);
+        productsField.setEditable(false); // Niet te editen
         add(productsField);
 
         add(new JLabel("Resolution Type:"));
-        resolutionTypeField = new JTextField(resolutionType);
-        add(resolutionTypeField);
+        ResolutionType = new JComboBox<>(new String[]{"Not decided", "Refund", "Refund (Store Credit)", "Exchange Product", "No Refund"});
+        ResolutionType.setSelectedItem(resolutionType);
+        add(ResolutionType);
 
         add(new JLabel("Return Reason:"));
         returnReasonField = new JTextField(returnReason);
+        returnReasonField.setEditable(false); // Niet te editen
         add(returnReasonField);
 
         add(new JLabel("Handled:"));
@@ -103,7 +109,7 @@ public class ResolveModal extends JDialog {
     }
 
     public String getResolutionType() {
-        return resolutionTypeField.getText();
+        return (String) ResolutionType.getSelectedItem();
     }
 
     public String getReturnReason() {

@@ -30,7 +30,6 @@ public class RetourInfoPanel extends JPanel {
 
         JPanel infoPanel = new JPanel();
         infoPanel.setLayout(new GridLayout(8, 1));
-        infoPanel.setBackground(Color.WHITE);
 
         retourId = createLabel("");
         infoPanel.add(retourId);
@@ -59,24 +58,11 @@ public class RetourInfoPanel extends JPanel {
         add(infoPanel, BorderLayout.CENTER);
 
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setPreferredSize(new Dimension(400, 140));
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
-        buttonPanel.setLayout(new GridLayout(1, 2));
-        buttonPanel.setBackground(Color.WHITE);
 
         JButton resolve = new JButton("Resolve");
-        resolve.setBackground(Color.BLACK);
-        resolve.setForeground(Color.WHITE);
-        resolve.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
+        resolve.setForeground(Color.BLACK);
         resolve.addActionListener(e -> openResolveModal());
         buttonPanel.add(resolve);
-
-        JButton support = new JButton("Support");
-        support.setBackground(Color.BLACK);
-        support.setForeground(Color.WHITE);
-        support.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
-        support.addActionListener(e -> new SupportModal());
-        buttonPanel.add(support);
 
         add(buttonPanel, BorderLayout.SOUTH);
     }
