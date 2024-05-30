@@ -1,5 +1,7 @@
 package nl.nerdygadgets.logistiek.gui.panels;
 
+import nl.nerdygadgets.logistiek.gui.modals.SupportModal;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -8,26 +10,42 @@ public class Headpanel extends JPanel {
     public Headpanel() {
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 
-        JButton homeButton = createStyledButton("Home");
-        JButton returnsButton = createStyledButton("Returns");
-        JButton reportsButton = createStyledButton("Reports");
-        JButton settingsButton = createStyledButton("Settings");
-        JButton supportButton = createStyledButton("Get Support");
-        JButton closeButton = new JButton("X");
 
+        add(Box.createHorizontalStrut(10));
+        JButton homeButton = createStyledButton("Home");
         add(homeButton);
+
+        add(Box.createHorizontalStrut(10));
+        JButton returnsButton = createStyledButton("Returns");
         add(returnsButton);
+
+        add(Box.createHorizontalStrut(10));
+        JButton reportsButton = createStyledButton("Reports");
         add(reportsButton);
+
+        add(Box.createHorizontalStrut(10));
+        JButton settingsButton = createStyledButton("Settings");
         add(settingsButton);
+
+        add(Box.createHorizontalStrut(10));
+        JButton supportButton = createStyledButton("Get Support");
         add(supportButton);
 
-        add(Box.createHorizontalGlue());
+        supportButton.addActionListener(e -> {
+            new SupportModal();
+        });
+
+        /* add(Box.createHorizontalGlue());
+        JButton closeButton = createStyledButton("Close");
         add(closeButton);
+         */
 
         setBorder(BorderFactory.createEmptyBorder());
 
-        // Style van de Close button alleen
-        closeButton.setForeground(Color.BLACK);
+
+
+        // Style alleen close knop
+        /* closeButton.setForeground(Color.BLACK);
         closeButton.setFocusPainted(false);
         closeButton.setOpaque(false);
         closeButton.setFont(new Font("", Font.PLAIN, 20));
@@ -37,19 +55,15 @@ public class Headpanel extends JPanel {
         closeButton.addActionListener(e -> {
             JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
             frame.dispose();
-        });
+        }
+        ); */
     }
 
-    // Style van alle buttons excl. close
+    // Style alle knoppen
     private JButton createStyledButton(String text) {
         JButton button = new JButton(text);
         button.setForeground(Color.BLACK);
-        button.setFont(new Font("", Font.PLAIN, 20));
-        button.setFont(button.getFont().deriveFont(Font.BOLD));
-        button.setContentAreaFilled(false);
-        button.setFocusPainted(false);
-        button.setBorderPainted(false);
-        button.setOpaque(false);
+        button.setMargin(new Insets(10, 10, 10, 10));
         return button;
     }
 

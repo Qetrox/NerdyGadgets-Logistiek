@@ -9,20 +9,18 @@ import java.io.IOException;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
 
 public class RetourGUI extends DefaultJFrame {
 
     public RetourGUI() throws IOException {
         super("Retour");
 
-        GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-        if (gd.isFullScreenSupported()) {
-            setUndecorated(true);
-            gd.setFullScreenWindow(this);
-            setSize(1200, 800);
-        } else {
-            setSize(1200, 800);
-        }
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        setSize(screenSize.width, screenSize.height);
+
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
@@ -32,13 +30,13 @@ public class RetourGUI extends DefaultJFrame {
         RetourInfoPanel retourInfoPanel = new RetourInfoPanel();
         mainPanel.add(retourInfoPanel, BorderLayout.EAST);
 
-        RMATable rmaTable = new RMATable();
+        RMATable rmaTable = new RMATable(retourInfoPanel);
         mainPanel.add(rmaTable, BorderLayout.CENTER);
 
         getContentPane().add(mainPanel, BorderLayout.CENTER);
 
-        Headpanel Headpanel = new Headpanel();
-        getContentPane().add(Headpanel, BorderLayout.NORTH);
+        Headpanel headpanel = new Headpanel();
+        getContentPane().add(headpanel, BorderLayout.NORTH);
     }
 
     public static void main(String[] args) {
@@ -57,8 +55,10 @@ class RMATable extends JPanel {
     private JTable table;
     private DefaultTableModel model;
     private TableRowSorter<DefaultTableModel> sorter;
+    private RetourInfoPanel retourInfoPanel;
 
-    public RMATable() {
+    public RMATable(RetourInfoPanel retourInfoPanel) {
+        this.retourInfoPanel = retourInfoPanel;
         setLayout(new BorderLayout());
 
         JPanel searchPanel = new JPanel();
@@ -94,7 +94,7 @@ class RMATable extends JPanel {
 
             @Override
             public boolean isCellEditable(int row, int column) {
-                return column == 5 || column == 7;
+                return false;
             }
         };
 
@@ -103,7 +103,7 @@ class RMATable extends JPanel {
         table.setRowSorter(sorter);
 
         JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setBorder(BorderFactory.createEmptyBorder()); // Set empty border
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
         add(scrollPane, BorderLayout.CENTER);
 
         searchButton.addActionListener(e -> {
@@ -118,6 +118,24 @@ class RMATable extends JPanel {
         clearButton.addActionListener(e -> {
             searchField.setText("");
             sorter.setRowFilter(null);
+        });
+
+        table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting() && table.getSelectedRow() != -1) {
+                    int selectedRow = table.convertRowIndexToModel(table.getSelectedRow());
+                    String retourID = (String) model.getValueAt(selectedRow, 0);
+                    String orderID = (String) model.getValueAt(selectedRow, 1);
+                    String customerName = (String) model.getValueAt(selectedRow, 2);
+                    String date = (String) model.getValueAt(selectedRow, 3);
+                    String products = (String) model.getValueAt(selectedRow, 4);
+                    String resolutionType = (String) model.getValueAt(selectedRow, 5);
+                    String returnReason = (String) model.getValueAt(selectedRow, 6);
+                    boolean handled = (boolean) model.getValueAt(selectedRow, 7);
+                    retourInfoPanel.updateInfo(retourID, orderID, customerName, date, products, resolutionType, returnReason, handled);
+                }
+            }
         });
     }
 }
