@@ -83,6 +83,17 @@ public class UpdatePackageHandler implements HttpHandler {
     }
     private static void sendDeliveryEmail(PackageStatus packageStatus, int userId, WebHelper.WebPackage pack) throws SQLException {
 
+        if(packageStatus == PackageStatus.DELIVERED) {
+            //update in order database
+            DatabaseConnector conn = Main.getDatabaseConnection();
+            Connection connection = conn.getConnection();
+
+            PreparedStatement stmt = connection.prepareStatement("UPDATE `order` SET delivered = 1 WHERE id = ?");
+            System.out.println(pack.id);
+            stmt.setInt(1, pack.id);
+            stmt.executeUpdate();
+        }
+
         DatabaseConnector conn = Main.getDatabaseConnection();
         Connection connection = conn.getConnection();
 

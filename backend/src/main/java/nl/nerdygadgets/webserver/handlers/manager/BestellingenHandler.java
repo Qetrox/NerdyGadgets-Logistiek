@@ -7,6 +7,7 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import nl.nerdygadgets.Main;
 import nl.nerdygadgets.util.DatabaseConnector;
+import nl.nerdygadgets.util.delivery.DeliveryRoutes;
 import nl.nerdygadgets.util.web.WebHelper;
 
 import java.io.IOException;
@@ -45,7 +46,8 @@ public class BestellingenHandler implements HttpHandler {
                         rs.getString("street_name"),
                         rs.getString("apartment_nr"),
                         rs.getString("postal_code"),
-                        rs.getString("city")
+                        rs.getString("city"),
+                        DeliveryRoutes.getDriver(rs.getInt("id"))
                 );
                 orders.put(order.id, order);
             }
