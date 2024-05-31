@@ -2,19 +2,6 @@ package nl.nerdygadgets.logistiek.util;
 
 public class WebHelper {
 
-    public static class WebToken {
-        public String token;
-        public boolean isManager;
-        public int id;
-
-        public WebToken(String token, boolean isManager, int id) {
-            this.token = token;
-            this.isManager = isManager;
-            this.id = id;
-        }
-
-    }
-
     public static class WebRetour {
         public int retourId;
         public String resolutionType;
@@ -34,6 +21,14 @@ public class WebHelper {
             this.name = name;
         }
     }
+
+    public static class WebToken {
+        public int id;
+        public boolean isManager;
+
+        public WebToken(int id, boolean isManager) {
+            this.id = id;
+            this.isManager = isManager;
+        }
+    }
 }
-
-

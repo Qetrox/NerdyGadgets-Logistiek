@@ -1,7 +1,5 @@
 package nl.nerdygadgets.logistiek.util;
-/**
- * Klasse om alle cache te beheren zoals de login token.
- */
+
 public class CacheManager {
 
     private static WebHelper.WebToken token;
@@ -29,5 +27,4 @@ public class CacheManager {
     public static int getUserId() {
         return CacheManager.token.id;
     }
-
 }

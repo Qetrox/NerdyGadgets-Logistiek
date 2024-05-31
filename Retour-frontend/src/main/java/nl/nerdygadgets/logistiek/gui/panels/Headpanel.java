@@ -9,9 +9,11 @@ import java.awt.*;
 
 public class Headpanel extends JPanel {
 
-    public Headpanel() {
-        setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+    public RetourGUI parentFrame;
 
+    public Headpanel(RetourGUI parentFrame) {
+        this.parentFrame = parentFrame;
+        setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 
         add(Box.createHorizontalStrut(10));
         JButton homeButton = createStyledButton("Home");
@@ -35,37 +37,17 @@ public class Headpanel extends JPanel {
 
         homeButton.addActionListener(e -> {
             new HomeScreen().setVisible(true);
+            parentFrame.close();
         });
 
         supportButton.addActionListener(e -> {
             new SupportModal();
         });
 
-        /* add(Box.createHorizontalGlue());
-        JButton closeButton = createStyledButton("Close");
-        add(closeButton);
-         */
-
         setBorder(BorderFactory.createEmptyBorder());
-
-
-
-        // Style alleen close knop
-        /* closeButton.setForeground(Color.BLACK);
-        closeButton.setFocusPainted(false);
-        closeButton.setOpaque(false);
-        closeButton.setFont(new Font("", Font.PLAIN, 20));
-        closeButton.setFont(closeButton.getFont().deriveFont(Font.BOLD));
-        closeButton.setContentAreaFilled(false);
-        closeButton.setBorderPainted(false);
-        closeButton.addActionListener(e -> {
-            JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
-            frame.dispose();
-        }
-        ); */
     }
 
-    // Style alle knoppen
+    // Style all buttons
     private JButton createStyledButton(String text) {
         JButton button = new JButton(text);
         button.setForeground(Color.BLACK);
