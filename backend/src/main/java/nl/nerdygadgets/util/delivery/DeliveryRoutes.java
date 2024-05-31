@@ -14,10 +14,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Deze klasse zorgt voor alles dat te maken heeft met nieuwe routes te maken en op te slaan.
@@ -132,6 +129,7 @@ public class DeliveryRoutes {
 
     public static WebHelper.WebDelivery getRoute() {
         for(WebHelper.WebDelivery delivery : routes.keySet()) {
+            //return delivery;
             if(!routes.get(delivery)) {
                 routes.put(delivery, true);
                 return delivery;
@@ -148,7 +146,7 @@ public class DeliveryRoutes {
         for(WebHelper.WebDelivery delivery : routes.keySet()) {
             for(WebHelper.WebPackage pack : delivery.packages) {
                 if(pack.id == orderId) {
-                    return delivery.driverId;
+                    return Objects.requireNonNullElse(delivery.driverId, -1);
                 }
             }
         }
