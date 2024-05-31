@@ -1,19 +1,30 @@
 package nl.nerdygadgets.logistiek.gui;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import nl.nerdygadgets.logistiek.gui.panels.Headpanel;
 import nl.nerdygadgets.logistiek.gui.panels.RetourInfoPanel;
+import nl.nerdygadgets.logistiek.util.CacheManager;
 import nl.nerdygadgets.logistiek.util.DefaultJFrame;
+import nl.nerdygadgets.logistiek.util.HttpUtil;
+import nl.nerdygadgets.logistiek.util.WebHelper;
 
-import java.awt.*;
-import java.io.IOException;
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableRowSorter;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
+import java.awt.*;
+import java.io.IOException;
+import java.net.URL;
+import java.util.List;
 
 public class RetourGUI extends DefaultJFrame {
+
+    public void close() {
+        this.dispose();
+    }
 
     public RetourGUI() throws IOException {
         super("Retour");
@@ -35,13 +46,16 @@ public class RetourGUI extends DefaultJFrame {
 
         getContentPane().add(mainPanel, BorderLayout.CENTER);
 
-        Headpanel headpanel = new Headpanel();
+        Headpanel headpanel = new Headpanel(this);
         getContentPane().add(headpanel, BorderLayout.NORTH);
     }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             try {
+                WebHelper.WebToken token = new WebHelper.WebToken(1, true);
+                CacheManager.setToken(token);
+
                 RetourGUI frame = new RetourGUI();
                 frame.setVisible(true);
             } catch (IOException e) {
@@ -57,7 +71,7 @@ class RMATable extends JPanel {
     private TableRowSorter<DefaultTableModel> sorter;
     private RetourInfoPanel retourInfoPanel;
 
-    public RMATable(RetourInfoPanel retourInfoPanel) {
+    public RMATable(RetourInfoPanel retourInfoPanel) throws IOException {
         this.retourInfoPanel = retourInfoPanel;
         setLayout(new BorderLayout());
 
@@ -76,17 +90,12 @@ class RMATable extends JPanel {
 
         add(searchPanel, BorderLayout.NORTH);
 
-        String[] columnNames = {"Retour ID", "Order ID", "Customer Name", "Created on Date", "Products", "Resolution Type", "Returns Reason", "Handled"};
+        String[] columnNames = {"Retour ID", "Order ID", "Customer Name", "Create Date", "Resolution Type", "Return Reason", "Handled"};
 
-        Object[][] data = {
-                {"#408", "#1003", "Karen kik", "Nov 21, 2017", "Fortnite battle pass", "Refund", "Wrong Color", true},
-                {"#407", "#1003", "Bob bob", "Oct 20, 2017", "Fortnite golden scar", "Refund", "Wrong Color", false}
-        };
-
-        model = new DefaultTableModel(data, columnNames) {
+        model = new DefaultTableModel(columnNames, 0) {
             @Override
             public Class<?> getColumnClass(int column) {
-                if (column == 7) {
+                if (column == 6) {
                     return Boolean.class;
                 }
                 return String.class;
@@ -108,7 +117,7 @@ class RMATable extends JPanel {
 
         searchButton.addActionListener(e -> {
             String searchText = searchField.getText();
-            if (searchText.trim().length() == 0) {
+            if (searchText.trim().isEmpty()) {
                 sorter.setRowFilter(null);
             } else {
                 sorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchText, 0, 2));
@@ -125,20 +134,48 @@ class RMATable extends JPanel {
             public void valueChanged(ListSelectionEvent e) {
                 if (!e.getValueIsAdjusting() && table.getSelectedRow() != -1) {
                     int selectedRow = table.convertRowIndexToModel(table.getSelectedRow());
-                    String retourID = (String) model.getValueAt(selectedRow, 0);
-                    String orderID = (String) model.getValueAt(selectedRow, 1);
-                    String customerName = (String) model.getValueAt(selectedRow, 2);
-                    String date = (String) model.getValueAt(selectedRow, 3);
-                    String products = (String) model.getValueAt(selectedRow, 4);
-                    String resolutionType = (String) model.getValueAt(selectedRow, 5);
-                    String returnReason = (String) model.getValueAt(selectedRow, 6);
-                    boolean handled = (boolean) model.getValueAt(selectedRow, 7);
-                    retourInfoPanel.updateInfo(retourID, orderID, customerName, date, products, resolutionType, returnReason, handled);
-                    retourInfoPanel.setSelectedRowIndex(selectedRow);
-                    retourInfoPanel.setTableModel(model);
+                    updateRetourInfo(selectedRow);
                 }
             }
         });
+
+        // Fetch data and update the RetourInfoPanel
+        fetchRetourData();
+        if (model.getRowCount() > 0) {
+            updateRetourInfo(0); // Update with the first row
+        }
+    }
+
+    private void fetchRetourData() throws IOException {
+        if (!CacheManager.hasToken()) {
+            throw new IOException("User is not authenticated.");
+        }
+
+        URL url = new URL("https://api.nerdy-gadgets.nl/retour");
+        System.out.println("Fetching data from URL: " + url); // Debug log
+
+        try {
+            String response = HttpUtil.getRequest(url);
+            System.out.println("Response: " + response); // Debug log
+
+            if (response != null && !response.isEmpty()) {
+                Gson gson = new GsonBuilder().create();
+                List<WebHelper.WebRetour> retours = gson.fromJson(response, new TypeToken<List<WebHelper.WebRetour>>(){}.getType());
+                System.out.println("Parsed retours: " + retours); // Debug log
+
+                for (WebHelper.WebRetour retour : retours) {
+                    model.addRow(new Object[]{
+                            retour.retourId, retour.orderId, retour.name, retour.created, retour.resolutionType, retour.returnReason, retour.handled
+                    });
+                }
+            } else {
+                System.out.println("No data received from API."); // Debug log
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error fetching data: " + e.getMessage()); // Debug log
+        }
 
         selectFirstRow();
     }
@@ -147,5 +184,18 @@ class RMATable extends JPanel {
         if (table.getRowCount() > 0) {
             table.setRowSelectionInterval(0, 0);
         }
+    }
+
+    private void updateRetourInfo(int rowIndex) {
+        int retourId = (int) model.getValueAt(rowIndex, 0);
+        int orderId = (int) model.getValueAt(rowIndex, 1);
+        String customerName = (String) model.getValueAt(rowIndex, 2);
+        long createDate = (long) model.getValueAt(rowIndex, 3);
+        String resolutionType = (String) model.getValueAt(rowIndex, 4);
+        String returnReason = (String) model.getValueAt(rowIndex, 5);
+        boolean handled = (boolean) model.getValueAt(rowIndex, 6);
+        retourInfoPanel.updateInfo(retourId, orderId, customerName, createDate, resolutionType, returnReason, handled);
+        retourInfoPanel.setSelectedRowIndex(rowIndex);
+        retourInfoPanel.setTableModel(model);
     }
 }

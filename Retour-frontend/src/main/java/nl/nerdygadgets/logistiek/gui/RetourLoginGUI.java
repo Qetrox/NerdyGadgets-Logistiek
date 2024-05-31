@@ -1,11 +1,10 @@
 package nl.nerdygadgets.logistiek.gui;
 
 import com.google.gson.GsonBuilder;
-import nl.nerdygadgets.logistiek.util.CacheManager;
-import nl.nerdygadgets.logistiek.util.ColorUtil;
 import nl.nerdygadgets.logistiek.util.DefaultJFrame;
-import nl.nerdygadgets.logistiek.util.web.HttpUtil;
-import nl.nerdygadgets.logistiek.util.web.WebHelper;
+import nl.nerdygadgets.logistiek.util.HttpUtil;
+import nl.nerdygadgets.logistiek.util.WebHelper;
+import nl.nerdygadgets.logistiek.util.CacheManager;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -80,7 +79,7 @@ public class RetourLoginGUI extends DefaultJFrame {
                 // Gebruik dit om de token te krijgen voor requests etc.
                 // CacheManager.getToken() - returnt de huidige token klasse.
 
-                new RetourGUI();
+                new HomeScreen();
                 this.dispose();
                 parentFrame.dispose();
 
