@@ -134,21 +134,16 @@ class RMATable extends JPanel {
             public void valueChanged(ListSelectionEvent e) {
                 if (!e.getValueIsAdjusting() && table.getSelectedRow() != -1) {
                     int selectedRow = table.convertRowIndexToModel(table.getSelectedRow());
-                    int retourId = (int) model.getValueAt(selectedRow, 0);
-                    int orderId = (int) model.getValueAt(selectedRow, 1);
-                    String customerName = (String) model.getValueAt(selectedRow, 2);
-                    long createDate = (long) model.getValueAt(selectedRow, 3);
-                    String resolutionType = (String) model.getValueAt(selectedRow, 4);
-                    String returnReason = (String) model.getValueAt(selectedRow, 5);
-                    boolean handled = (boolean) model.getValueAt(selectedRow, 6);
-                    retourInfoPanel.updateInfo(retourId, orderId, customerName, createDate, resolutionType, returnReason, handled);
-                    retourInfoPanel.setSelectedRowIndex(selectedRow);
-                    retourInfoPanel.setTableModel(model);
+                    updateRetourInfo(selectedRow);
                 }
             }
         });
 
+        // Fetch data and update the RetourInfoPanel
         fetchRetourData();
+        if (model.getRowCount() > 0) {
+            updateRetourInfo(0); // Update with the first row
+        }
     }
 
     private void fetchRetourData() throws IOException {
@@ -189,5 +184,18 @@ class RMATable extends JPanel {
         if (table.getRowCount() > 0) {
             table.setRowSelectionInterval(0, 0);
         }
+    }
+
+    private void updateRetourInfo(int rowIndex) {
+        int retourId = (int) model.getValueAt(rowIndex, 0);
+        int orderId = (int) model.getValueAt(rowIndex, 1);
+        String customerName = (String) model.getValueAt(rowIndex, 2);
+        long createDate = (long) model.getValueAt(rowIndex, 3);
+        String resolutionType = (String) model.getValueAt(rowIndex, 4);
+        String returnReason = (String) model.getValueAt(rowIndex, 5);
+        boolean handled = (boolean) model.getValueAt(rowIndex, 6);
+        retourInfoPanel.updateInfo(retourId, orderId, customerName, createDate, resolutionType, returnReason, handled);
+        retourInfoPanel.setSelectedRowIndex(rowIndex);
+        retourInfoPanel.setTableModel(model);
     }
 }
