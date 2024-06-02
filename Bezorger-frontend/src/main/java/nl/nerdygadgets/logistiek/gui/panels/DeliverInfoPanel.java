@@ -99,6 +99,16 @@ public class DeliverInfoPanel extends JPanel {
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
+
+            if(CacheManager.getCurrentDelivery().packages.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "All orders are delivered", "All Orders Delivered", JOptionPane.INFORMATION_MESSAGE);
+                JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
+                frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+            }
+            else {
+                JOptionPane.showMessageDialog(null, "Next order is #"+ CacheManager.getCurrentPackage().id, "Next Order", JOptionPane.INFORMATION_MESSAGE);
+            }
+
             repaint();
             title.setText("Order #" + CacheManager.getCurrentPackage().id);
             address.setText(CacheManager.getCurrentPackage().address);
@@ -117,6 +127,15 @@ public class DeliverInfoPanel extends JPanel {
                 resetWaypoints(mapViewer, new GeoPosition(CacheManager.getCurrentDelivery().startLatitude, CacheManager.getCurrentDelivery().startLongitude), new GeoPosition(CacheManager.getCurrentDelivery().endLatitude, CacheManager.getCurrentDelivery().endLongitude));
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
+            }
+
+            if(CacheManager.getCurrentDelivery().packages.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "All orders are delivered", "All Orders Delivered", JOptionPane.INFORMATION_MESSAGE);
+                JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
+                frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+            }
+            else {
+                JOptionPane.showMessageDialog(null, "Next order is #"+ CacheManager.getCurrentPackage().id, "Next Order", JOptionPane.INFORMATION_MESSAGE);
             }
             repaint();
             title.setText("Order #" + CacheManager.getCurrentPackage().id);
@@ -137,26 +156,21 @@ public class DeliverInfoPanel extends JPanel {
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
+
+            if(CacheManager.getCurrentDelivery().packages.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "All orders are delivered", "All Orders Delivered", JOptionPane.INFORMATION_MESSAGE);
+                JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
+                frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+            }
+            else {
+                JOptionPane.showMessageDialog(null, "Next order is #"+ CacheManager.getCurrentPackage().id, "Next Order", JOptionPane.INFORMATION_MESSAGE);
+            }
             repaint();
             title.setText("Order #" + CacheManager.getCurrentPackage().id);
             address.setText(CacheManager.getCurrentPackage().address);
             name.setText(CacheManager.getCurrentPackage().name);
         });
         buttonPanel.add(smallerButton(cancel));
-
-        JButton support = new JButton("Support");
-        support.setBackground(ColorUtil.TEXT_COLOR);
-        support.setForeground(ColorUtil.BACKGROUND_COLOR);
-        support.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
-        support.addActionListener(e -> {
-            new SupportModal();
-            repaint();
-            title.setText("Order #" + CacheManager.getCurrentPackage().id);
-            address.setText(CacheManager.getCurrentPackage().address);
-            name.setText(CacheManager.getCurrentPackage().name);
-        });
-        buttonPanel.add(smallerButton(support));
-
         add(buttonPanel, BorderLayout.SOUTH);
     }
 

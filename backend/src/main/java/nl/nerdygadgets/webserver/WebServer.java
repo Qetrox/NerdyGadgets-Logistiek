@@ -26,7 +26,7 @@ public class WebServer {
      */
     public WebServer() throws IOException {
         startTimestamp = (int) (System.currentTimeMillis());
-        this.server = HttpServer.create(new InetSocketAddress(8082), 0);
+        this.server = HttpServer.create(new InetSocketAddress(8083), 0);
         this.server.setExecutor(threadPoolExecutor);
     }
 

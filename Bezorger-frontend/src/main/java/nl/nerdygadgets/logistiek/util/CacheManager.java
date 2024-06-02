@@ -34,6 +34,7 @@ public class CacheManager {
     }
 
     public static void deliverPackage() throws IOException {
+        boolean foundPackage = false;
         if(!CacheManager.currentDelivery.packages.isEmpty()) {
             CacheManager.updatePackageStatus(CacheManager.currentPackage, PackageStatus.DELIVERED);
             HttpUtil.getRequest(new URL("https://api.nerdy-gadgets.nl/updatepackage?id=" + CacheManager.currentDelivery.id + "&status=DELIVERED&token=" + CacheManager.getToken().token + "&packageId=" + CacheManager.currentPackage.id));
@@ -43,6 +44,7 @@ public class CacheManager {
                     CacheManager.setCurrentPackage(p);
                     CacheManager.updatePackageStatus(p, PackageStatus.IN_TRANSIT);
                     HttpUtil.getRequest(new URL("https://api.nerdy-gadgets.nl/updatepackage?id=" + CacheManager.currentDelivery.id + "&status=IN_TRANSIT&token=" + CacheManager.getToken().token + "&packageId=" + p.id));
+                    foundPackage = true;
                     break;
                 }
             }

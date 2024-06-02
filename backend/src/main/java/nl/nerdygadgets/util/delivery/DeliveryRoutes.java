@@ -129,11 +129,11 @@ public class DeliveryRoutes {
 
     public static WebHelper.WebDelivery getRoute() {
         for(WebHelper.WebDelivery delivery : routes.keySet()) {
-            //return delivery;
-            if(!routes.get(delivery)) {
+            return delivery;
+            /*if(!routes.get(delivery)) {
                 routes.put(delivery, true);
                 return delivery;
-            }
+            }*/
         }
         return null;
     }

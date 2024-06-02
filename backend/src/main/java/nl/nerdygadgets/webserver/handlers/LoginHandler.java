@@ -9,6 +9,7 @@ import nl.nerdygadgets.util.EmailUtil;
 import nl.nerdygadgets.util.web.AuthHelper;
 import nl.nerdygadgets.util.DatabaseConnector;
 import nl.nerdygadgets.util.web.WebHelper;
+import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.IOException;
 import java.sql.*;
@@ -171,11 +172,14 @@ public class LoginHandler implements HttpHandler {
         ResultSet rs = null;
         PreparedStatement stmt = null;
         Connection connection = null;
+
+        String password_ = DigestUtils.sha256Hex(password + "+jsf82jjkhAhfuisheg3h349HJAif93hjg");
+
         try {
             connection = conn.getConnection();
             stmt = connection.prepareStatement("SELECT * FROM employee WHERE username = ? AND password = ?");
             stmt.setString(1, username);
-            stmt.setString(2, password);
+            stmt.setString(2, password_);
             rs = stmt.executeQuery();
             if (rs.next()) {
                 if(!rs.getBoolean("isManager")) {
@@ -198,11 +202,14 @@ public class LoginHandler implements HttpHandler {
         ResultSet rs = null;
         PreparedStatement stmt = null;
         Connection connection = null;
+
+        String password_ = DigestUtils.sha256Hex(password + "+jsf82jjkhAhfuisheg3h349HJAif93hjg");
+
         try {
             connection = conn.getConnection();
             stmt = connection.prepareStatement("SELECT * FROM employee WHERE username = ? AND password = ?");
             stmt.setString(1, username);
-            stmt.setString(2, password);
+            stmt.setString(2, password_);
             rs = stmt.executeQuery();
             if (rs.next()) {
                 WebHelper.WebToken token = AuthHelper.generateToken(rs.getInt("employeeId"), isManager);
@@ -215,4 +222,5 @@ public class LoginHandler implements HttpHandler {
         }
         return null;
     }
+
 }
