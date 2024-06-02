@@ -5,6 +5,7 @@ import nl.nerdygadgets.logistiek.util.DefaultJFrame;
 import nl.nerdygadgets.logistiek.util.HttpUtil;
 import nl.nerdygadgets.logistiek.util.WebHelper;
 import nl.nerdygadgets.logistiek.util.CacheManager;
+import nl.nerdygadgets.logistiek.gui.panels.LoadPanel;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -19,34 +20,34 @@ public class RetourLoginGUI extends DefaultJFrame {
     private static JTextField usernameField;
     private static JPasswordField passwordField;
 
-    private static JFrame parentFrame;
+    private JDialog dialog;
+    private LoadPanel loadPanel;
 
-    public RetourLoginGUI(JFrame _parentFrame) {
-        JDialog frame = new JDialog(_parentFrame, "Inloggen", true);
-        parentFrame = _parentFrame;
+    public RetourLoginGUI(JFrame _parentFrame, LoadPanel _loadPanel) {
+        dialog = new JDialog(_parentFrame, "Inloggen", true);
+        loadPanel = _loadPanel;
 
         JButton loginButton = new JButton("Inloggen");
-        loginButton.addActionListener(ActionListener());
+        loginButton.addActionListener(createLoginButtonListener());
 
         Border emptyBorder = BorderFactory.createEmptyBorder(10, 10, 10, 10);
 
-        frame.setLayout(new GridLayout(4, 1));
+        dialog.setLayout(new GridLayout(4, 1));
 
         usernameField = new JTextField();
         passwordField = new JPasswordField();
 
-        frame.add(addMargin(new JLabel("Log in om verder te gaan", SwingConstants.CENTER), emptyBorder));
-        frame.add(addMargin(usernameField, emptyBorder));
-        frame.add(addMargin(passwordField, emptyBorder));
-        frame.add(addMargin(loginButton, emptyBorder));
+        dialog.add(addMargin(new JLabel("Log in om verder te gaan", SwingConstants.CENTER), emptyBorder));
+        dialog.add(addMargin(usernameField, emptyBorder));
+        dialog.add(addMargin(passwordField, emptyBorder));
+        dialog.add(addMargin(loginButton, emptyBorder));
 
-        frame.setSize(200, 300);
-        frame.setResizable(false);
-        frame.setVisible(true);
-
+        dialog.setSize(200, 300);
+        dialog.setResizable(false);
+        dialog.setVisible(true);
     }
 
-    private ActionListener ActionListener() {
+    private ActionListener createLoginButtonListener() {
         return e -> {
             System.out.println("Login button clicked");
             System.out.println("Username: " + usernameField.getText());
@@ -57,7 +58,7 @@ public class RetourLoginGUI extends DefaultJFrame {
                 return;
             }
 
-            URL url = null;
+            URL url;
             try {
                 url = new URL("https://api.nerdy-gadgets.nl/login?username=" + usernameField.getText() + "&password=" + new String(passwordField.getPassword()));
             } catch (MalformedURLException ex) {
@@ -78,6 +79,14 @@ public class RetourLoginGUI extends DefaultJFrame {
 
                 RetourGUI retourGUI = new RetourGUI();
                 retourGUI.setVisible(true);
+                dialog.dispose();
+
+                if (loadPanel != null) {
+                    Window window = SwingUtilities.getWindowAncestor(loadPanel);
+                    if (window != null) {
+                        window.dispose();
+                    }
+                }
 
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
@@ -91,5 +100,4 @@ public class RetourLoginGUI extends DefaultJFrame {
         panel.add(component, BorderLayout.CENTER);
         return panel;
     }
-
 }
