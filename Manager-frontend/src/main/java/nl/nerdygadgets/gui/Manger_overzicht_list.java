@@ -108,7 +108,12 @@ public class Manger_overzicht_list {
         try {
             String urlStr = "https://api.nerdy-gadgets.nl/manager/bestellingen?token=" + CacheManager.getToken().token;
             URL url = new URL(urlStr);
-            return HttpUtil.getRequest(url);
+            String jsonResponse = HttpUtil.getRequest(url);
+
+            // Debug statement to print raw JSON response
+            System.out.println("Raw JSON Response: " + jsonResponse);
+
+            return jsonResponse;
         } catch (MalformedURLException e) {
             e.printStackTrace();
             return null;
@@ -119,6 +124,8 @@ public class Manger_overzicht_list {
     }
 
     private TreeMap<Integer, Order> parseOrdersFromJson(String jsonResponse) {
+        System.out.println("JSON Response: " + jsonResponse); // Debug statement to print raw JSON response
+
         JsonObject jsonObject = JsonParser.parseString(jsonResponse).getAsJsonObject();
         TreeMap<Integer, Order> ordersMap = new TreeMap<>();
 
@@ -126,13 +133,20 @@ public class Manger_overzicht_list {
             int id = Integer.parseInt(entry.getKey());
             JsonObject orderJson = entry.getValue().getAsJsonObject();
 
+            // Debug statements to log each order's JSON details
+            System.out.println("Order ID: " + id);
+            System.out.println("Order JSON: " + orderJson.toString());
+
             String firstName = orderJson.has("firstName") ? orderJson.get("firstName").getAsString() : "Unknown";
             String lastName = orderJson.has("lastName") ? orderJson.get("lastName").getAsString() : "Unknown";
             String streetName = orderJson.has("streetName") ? orderJson.get("streetName").getAsString() : "Unknown";
             String apartmentNumber = orderJson.has("apartmentNumber") ? orderJson.get("apartmentNumber").getAsString() : "";
             String postalCode = orderJson.has("postalCode") ? orderJson.get("postalCode").getAsString() : "Unknown";
             String city = orderJson.has("city") ? orderJson.get("city").getAsString() : "Unknown";
-            String bezorger = orderJson.has("bezorger") ? orderJson.get("bezorger").getAsString() : "Unknown";
+            String bezorger = orderJson.has("driverId") ? orderJson.get("driverId").getAsString() : "Unknown";
+
+            // Log the value of bezorger for debugging
+            System.out.println("Bezorger: " + bezorger);
 
             Order order = new Order(
                     "Bestelling " + id,
