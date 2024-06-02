@@ -12,7 +12,6 @@ import nl.nerdygadgets.logistiek.util.WebHelper;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
@@ -21,7 +20,6 @@ import java.net.URL;
 import java.util.List;
 
 public class RetourGUI extends DefaultJFrame {
-
     public void close() {
         this.dispose();
     }
@@ -129,20 +127,16 @@ class RMATable extends JPanel {
             sorter.setRowFilter(null);
         });
 
-        table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                if (!e.getValueIsAdjusting() && table.getSelectedRow() != -1) {
-                    int selectedRow = table.convertRowIndexToModel(table.getSelectedRow());
-                    updateRetourInfo(selectedRow);
-                }
+        table.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting() && table.getSelectedRow() != -1) {
+                int selectedRow = table.convertRowIndexToModel(table.getSelectedRow());
+                updateRetourInfo(selectedRow);
             }
         });
 
-        // Fetch data and update the RetourInfoPanel
         fetchRetourData();
         if (model.getRowCount() > 0) {
-            updateRetourInfo(0); // Update with the first row
+            updateRetourInfo(0);
         }
     }
 
@@ -151,30 +145,24 @@ class RMATable extends JPanel {
             throw new IOException("User is not authenticated.");
         }
 
-        URL url = new URL("https://api.nerdy-gadgets.nl/retour");
-        System.out.println("Fetching data from URL: " + url); // Debug log
+        URL url = new URL("https://api.nerdy-gadgets.nl/retour?token=" + CacheManager.getToken().token);
 
         try {
             String response = HttpUtil.getRequest(url);
-            System.out.println("Response: " + response); // Debug log
 
             if (response != null && !response.isEmpty()) {
                 Gson gson = new GsonBuilder().create();
-                List<WebHelper.WebRetour> retours = gson.fromJson(response, new TypeToken<List<WebHelper.WebRetour>>(){}.getType());
-                System.out.println("Parsed retours: " + retours); // Debug log
+                List<WebHelper.WebRetour> retours = gson.fromJson(response, new TypeToken<List<WebHelper.WebRetour>>() {}.getType());
 
                 for (WebHelper.WebRetour retour : retours) {
                     model.addRow(new Object[]{
                             retour.retourId, retour.orderId, retour.name, retour.created, retour.resolutionType, retour.returnReason, retour.handled
                     });
                 }
-            } else {
-                System.out.println("No data received from API."); // Debug log
             }
 
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.println("Error fetching data: " + e.getMessage()); // Debug log
         }
 
         selectFirstRow();

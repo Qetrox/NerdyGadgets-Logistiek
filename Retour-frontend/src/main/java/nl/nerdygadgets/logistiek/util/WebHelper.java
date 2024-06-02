@@ -25,6 +25,7 @@ public class WebHelper {
     public static class WebToken {
         public int id;
         public boolean isManager;
+        public String token;
 
         public WebToken(int id, boolean isManager) {
             this.id = id;

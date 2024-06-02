@@ -19,7 +19,7 @@ public class Headpanel extends JPanel {
         JButton homeButton = createStyledButton("Home");
         add(homeButton);
 
-        add(Box.createHorizontalStrut(10));
+        /*add(Box.createHorizontalStrut(10));
         JButton returnsButton = createStyledButton("Returns");
         add(returnsButton);
 
@@ -29,7 +29,7 @@ public class Headpanel extends JPanel {
 
         add(Box.createHorizontalStrut(10));
         JButton settingsButton = createStyledButton("Settings");
-        add(settingsButton);
+        add(settingsButton);*/
 
         add(Box.createHorizontalStrut(10));
         JButton supportButton = createStyledButton("Get Support");

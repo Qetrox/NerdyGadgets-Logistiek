@@ -76,12 +76,8 @@ public class RetourLoginGUI extends DefaultJFrame {
                 WebHelper.WebToken token = builder.create().fromJson(response, WebHelper.WebToken.class);
                 CacheManager.setToken(token);
 
-                // Gebruik dit om de token te krijgen voor requests etc.
-                // CacheManager.getToken() - returnt de huidige token klasse.
-
-                new HomeScreen();
-                this.dispose();
-                parentFrame.dispose();
+                RetourGUI retourGUI = new RetourGUI();
+                retourGUI.setVisible(true);
 
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
@@ -89,7 +85,6 @@ public class RetourLoginGUI extends DefaultJFrame {
         };
     }
 
-    // Method to add margin to a component
     private Component addMargin(Component component, Border border) {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBorder(border);

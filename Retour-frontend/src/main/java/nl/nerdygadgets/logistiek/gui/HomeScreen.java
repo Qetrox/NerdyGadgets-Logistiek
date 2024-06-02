@@ -1,5 +1,7 @@
 package nl.nerdygadgets.logistiek.gui;
 
+import nl.nerdygadgets.logistiek.gui.modals.SupportModal;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -20,7 +22,7 @@ public class HomeScreen extends JFrame {
         navigationPanel.setBackground(Color.BLACK);
         navigationPanel.setLayout(new BoxLayout(navigationPanel, BoxLayout.Y_AXIS));
 
-        JLabel userLabel = new JLabel("BLLBLBBRBL");
+        JLabel userLabel = new JLabel("Welcome, ");
         userLabel.setForeground(Color.WHITE);
         userLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         userLabel.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 150));
@@ -30,7 +32,7 @@ public class HomeScreen extends JFrame {
         mainPanel.setLayout(new GridLayout(2, 2, 20, 20));
         mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        String[] mainButtons = {"Returns", "Reports", "Settings", "Support"};
+        String[] mainButtons = {"Returns"/*, "Reports", "Settings"*/, "Support"};
         for (String buttonLabel : mainButtons) {
             JButton button = new JButton(buttonLabel);
             button.setFont(new Font("Arial", Font.PLAIN, 24));
@@ -45,20 +47,18 @@ public class HomeScreen extends JFrame {
                                 new RetourGUI().setVisible(true);
                                 HomeScreen.this.dispose();
                                 break;
-                            case "Reports":
+                           /* case "Reports":
                                 new RetourLoadGUI().setVisible(true);
                                 HomeScreen.this.dispose();
                                 break;
                             case "Settings":
                                 new RetourLoadGUI().setVisible(true);
                                 HomeScreen.this.dispose();
-                                break;
+                                break; */
                             case "Support":
-                                new RetourLoadGUI().setVisible(true);
-                                HomeScreen.this.dispose();
+                                new SupportModal().setVisible(true);
                                 break;
                             default:
-                                // Handle default case if needed
                                 break;
                         }
                     } catch (IOException ex) {

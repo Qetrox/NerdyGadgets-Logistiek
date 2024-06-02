@@ -2,8 +2,6 @@ package nl.nerdygadgets.logistiek.gui.modals;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class ResolveModal extends JDialog {
     private JTextField retourIdField;
@@ -21,62 +19,50 @@ public class ResolveModal extends JDialog {
 
         setLayout(new GridLayout(9, 2));
 
-        add(new JLabel("Retour ID:"));
         retourIdField = new JTextField(retourId);
-        retourIdField.setEditable(false); // Niet te editen
-        add(retourIdField);
-
-        add(new JLabel("Order ID:"));
+        retourIdField.setEditable(false);
         orderIdField = new JTextField(orderId);
-        orderIdField.setEditable(false); // Niet te editen
-        add(orderIdField);
-
-        add(new JLabel("Customer Name:"));
+        orderIdField.setEditable(false);
         customerNameField = new JTextField(customerName);
-        customerNameField.setEditable(false); // Niet te editen
-        add(customerNameField);
-
-        add(new JLabel("Date:"));
+        customerNameField.setEditable(false);
         dateField = new JTextField(date);
-        add(dateField);
-
-        add(new JLabel("Products:"));
         productsField = new JTextField(products);
-        productsField.setEditable(false); // Niet te editen
-        add(productsField);
-
-        add(new JLabel("Resolution Type:"));
+        productsField.setEditable(false);
         ResolutionType = new JComboBox<>(new String[]{"Not decided", "Refund", "Refund (Store Credit)", "Exchange Product", "No Refund"});
         ResolutionType.setSelectedItem(resolutionType);
-        add(ResolutionType);
-
-        add(new JLabel("Return Reason:"));
         returnReasonField = new JTextField(returnReason);
-        returnReasonField.setEditable(false); // Niet te editen
-        add(returnReasonField);
-
-        add(new JLabel("Handled:"));
+        returnReasonField.setEditable(false);
         handledCheckBox = new JCheckBox();
         handledCheckBox.setSelected(handled);
+
+        add(new JLabel("Retour ID:"));
+        add(retourIdField);
+        add(new JLabel("Order ID:"));
+        add(orderIdField);
+        add(new JLabel("Customer Name:"));
+        add(customerNameField);
+        add(new JLabel("Date:"));
+        add(dateField);
+        add(new JLabel("Products:"));
+        add(productsField);
+        add(new JLabel("Resolution Type:"));
+        add(ResolutionType);
+        add(new JLabel("Return Reason:"));
+        add(returnReasonField);
+        add(new JLabel("Handled:"));
         add(handledCheckBox);
 
         JButton saveButton = new JButton("Save");
-        saveButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                resolved = true;
-                setVisible(false);
-            }
+        saveButton.addActionListener(e -> {
+            resolved = true;
+            setVisible(false);
         });
         add(saveButton);
 
         JButton cancelButton = new JButton("Cancel");
-        cancelButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                resolved = false;
-                setVisible(false);
-            }
+        cancelButton.addActionListener(e -> {
+            resolved = false;
+            setVisible(false);
         });
         add(cancelButton);
 
