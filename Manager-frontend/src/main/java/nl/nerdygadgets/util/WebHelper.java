@@ -31,8 +31,9 @@ public class WebHelper {
         public String apartmentNumber;
         public String postalCode;
         public String city;
+        public int driverID;
 
-        public WebOrder(int id, String date, String firstName, String lastName, String email, String streetname, String apartmentNumber, String postalCode, String city) {
+        public WebOrder(int id, String date, String firstName, String lastName, String email, String streetname, String apartmentNumber, String postalCode, String city, int driverID) {
             this.id = id;
             this.date = date;
             this.firstName = firstName;
@@ -42,6 +43,7 @@ public class WebHelper {
             this.apartmentNumber = apartmentNumber;
             this.postalCode = postalCode;
             this.city = city;
+            this.driverID = driverID;
         }
 
     }

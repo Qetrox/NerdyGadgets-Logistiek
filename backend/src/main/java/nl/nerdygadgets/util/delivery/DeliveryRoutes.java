@@ -14,10 +14,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Deze klasse zorgt voor alles dat te maken heeft met nieuwe routes te maken en op te slaan.
@@ -38,15 +35,15 @@ public class DeliveryRoutes {
         Connection connection = conn.getConnection();
 
         Statement stmt = connection.createStatement();
-        ResultSet rs = conn.query("SELECT a.id, a.order_date, CONCAT(b.first_name, ' ', b.surname) as name, a.user_id, b.street_name, b.apartment_nr, b.postal_code, b.city FROM `order` as a JOIN user as b ON a.user_id = b.id;");
+        ResultSet rs = conn.query("SELECT a.id, a.order_date, CONCAT(b.first_name, ' ', b.surname) as name, a.user_id, b.street_name, b.apartment_nr, b.postal_code, b.city FROM `order` as a JOIN user as b ON a.user_id = b.id WHERE a.delivered = 0;");
 
         int resultCount = 0;
         int validCount = 0;
 
         while (rs.next()) {
-            if(validCount >= 21) { //TODO: alleen voor testen gebruiken!!!!
+            /*if(validCount >= 21) { //TODO: alleen voor testen gebruiken!!!!
                 break;
-            }
+            }*/
             resultCount++;
             String street = rs.getString("street_name");
             String apartment = rs.getString("apartment_nr");
@@ -132,16 +129,27 @@ public class DeliveryRoutes {
 
     public static WebHelper.WebDelivery getRoute() {
         for(WebHelper.WebDelivery delivery : routes.keySet()) {
-            return delivery;
-            /*if(!routes.get(delivery)) {
+            //return delivery;
+            if(!routes.get(delivery)) {
                 routes.put(delivery, true);
                 return delivery;
-            }*/
+            }
         }
         return null;
     }
 
     public static void removeRoute(WebHelper.WebDelivery route) {
         routes.remove(route);
+    }
+
+    public static int getDriver(int orderId) {
+        for(WebHelper.WebDelivery delivery : routes.keySet()) {
+            for(WebHelper.WebPackage pack : delivery.packages) {
+                if(pack.id == orderId) {
+                    return Objects.requireNonNullElse(delivery.driverId, -1);
+                }
+            }
+        }
+        return -1;
     }
 }

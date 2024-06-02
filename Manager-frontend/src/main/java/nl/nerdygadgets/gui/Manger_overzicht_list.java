@@ -126,12 +126,19 @@ public class Manger_overzicht_list {
             int id = Integer.parseInt(entry.getKey());
             JsonObject orderJson = entry.getValue().getAsJsonObject();
 
+            String firstName = orderJson.has("firstName") ? orderJson.get("firstName").getAsString() : "Unknown";
+            String lastName = orderJson.has("lastName") ? orderJson.get("lastName").getAsString() : "Unknown";
+            String streetName = orderJson.has("streetName") ? orderJson.get("streetName").getAsString() : "Unknown";
+            String apartmentNumber = orderJson.has("apartmentNumber") ? orderJson.get("apartmentNumber").getAsString() : "";
+            String postalCode = orderJson.has("postalCode") ? orderJson.get("postalCode").getAsString() : "Unknown";
+            String city = orderJson.has("city") ? orderJson.get("city").getAsString() : "Unknown";
+            String bezorger = orderJson.has("bezorger") ? orderJson.get("bezorger").getAsString() : "Unknown";
+
             Order order = new Order(
                     "Bestelling " + id,
-                    orderJson.get("firstName").getAsString() + " " + orderJson.get("lastName").getAsString(),
-                    orderJson.get("streetName").getAsString() + " " + orderJson.get("apartmentNumber").getAsString() + ", " +
-                            orderJson.get("postalCode").getAsString() + " " + orderJson.get("city").getAsString(),
-                    "Bezorger" // Replace with actual bezorger field if available
+                    firstName + " " + lastName,
+                    streetName + " " + apartmentNumber + ", " + postalCode + " " + city,
+                    bezorger
             );
 
             ordersMap.put(id, order);
@@ -182,6 +189,4 @@ public class Manger_overzicht_list {
             return order;
         }
     }
-
-    
 }
